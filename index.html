@@ -580,6 +580,11 @@ body {
   <div class="header">
     <h1>八字命盤</h1>
     <div class="subtitle">子 平 推 命 · 四 柱 排 盤</div>
+    <div id="visitor-counter" style="margin-top:8px;font-size:0.75rem;color:rgba(200,170,120,0.5);">
+      <span id="busuanzi_container_site_pv">👁 <span id="busuanzi_value_site_pv"></span> 次浏览</span>
+      <span style="margin:0 8px;">|</span>
+      <span id="busuanzi_container_site_uv">👤 <span id="busuanzi_value_site_uv"></span> 位访客</span>
+    </div>
   </div>
 
   <!-- 输入区 -->
@@ -1979,5 +1984,11 @@ function scrollToInput() {
   document.getElementById('input-card').scrollIntoView({ behavior: 'smooth' });
 }
 </script>
+<!-- 不蒜子 访问统计 -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!-- 百度统计（去 https://tongji.baidu.com/ 注册获取代码，替换下面这行） -->
+<!-- <script>var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?YOUR_ID";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();</script> -->
+
 </body>
 </html>
