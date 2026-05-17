@@ -17,3 +17,10 @@
   for = "/*.js"
   [headers.values]
     Content-Type = "application/javascript; charset=UTF-8"
+
+[functions]
+  directory = "netlify/functions"
+
+[build]
+  command = "echo done"
+  publish = "."

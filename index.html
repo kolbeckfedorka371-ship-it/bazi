@@ -135,6 +135,8 @@ body {
 
 .card:hover {
   border-color: rgba(200,150,50,0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.55), 0 0 20px rgba(180,120,40,0.08);
   box-shadow: 0 12px 50px rgba(0,0,0,0.55), 0 0 30px rgba(180,120,30,0.08);
 }
 
@@ -196,7 +198,7 @@ body {
 
 .input-group input:focus, .input-group select:focus {
   border-color: var(--gold);
-  box-shadow: 0 0 16px rgba(200,150,50,0.15);
+  box-shadow: 0 0 16px rgba(200,150,50,0.25), 0 0 40px rgba(180,120,30,0.08);
 }
 
 .input-group input[type="number"] {
@@ -706,21 +708,12 @@ body {
 
     <!-- AI 命理问答 -->
     <div class="card">
-      <div class="card-title">🤖 AI 命理问答</div>
-      <div id="chat-setup" style="text-align:center;padding:10px 0;">
-        <div style="font-size:0.85rem;color:var(--text-dim);margin-bottom:12px;">🤖 AI 命理问答 · 请联系开发者获取 API</div>
-        <div style="display:flex;gap:8px;max-width:500px;margin:0 auto;">
-          <input type="password" id="chat-apikey" placeholder="请输入开发者授权的 API Key" style="flex:1;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:0.9rem;font-family:inherit;outline:none;">
-          <button class="btn btn-sm" onclick="saveApiKey()">保存</button>
-        </div>
-        <div style="font-size:0.72rem;color:var(--text-dim);margin-top:8px;">授权 Key 仅保存在本机浏览器，不会上传</div>
-      </div>
-      <div id="chat-area" style="display:none;">
+      <div class="card-title">☯ 命理回答</div>
+      <div id="chat-area" style="padding:10px 0;">
         <div id="chat-messages" style="max-height:360px;overflow-y:auto;padding:8px 0;margin-bottom:12px;"></div>
         <div style="display:flex;gap:8px;">
           <input type="text" id="chat-input" placeholder="输入你的命理问题..." style="flex:1;background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:20px;padding:10px 18px;color:var(--text);font-size:0.9rem;font-family:inherit;outline:none;" onkeydown="if(event.key==='Enter')sendChat()">
           <button class="btn btn-sm" onclick="sendChat()">发送</button>
-          <button class="btn btn-sm" onclick="resetApiKey()" title="更换API Key">⚙</button>
         </div>
         <div id="chat-loading" style="display:none;text-align:center;padding:8px;color:var(--gold);font-size:0.85rem;">AI 正在思考...</div>
       </div>
@@ -766,6 +759,15 @@ body {
           </tr></thead>
           <tbody id="admin-tbody"></tbody>
         </table>
+        <div style="margin-top:20px;font-size:0.85rem;color:var(--gold);border-top:1px solid var(--border);padding-top:12px;">💬 AI 问答记录（共 <b id="admin-chat-count">0</b> 条）</div>
+        <div style="max-height:300px;overflow-y:auto;">
+          <table style="width:100%;border-collapse:collapse;font-size:0.82rem;">
+            <thead><tr style="color:var(--gold);border-bottom:1px solid var(--border);">
+              <th style="padding:8px;">#</th><th style="padding:8px;">提问</th><th style="padding:8px;">回答</th><th style="padding:8px;">时间</th>
+            </tr></thead>
+            <tbody id="admin-chat-tbody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -1328,9 +1330,10 @@ function cgTotalText(liang) {
 
 function renderChengGu(lunar) {
   var yearGz = lunar.getYearInGanZhi ? lunar.getYearInGanZhi() : '';
-  var month = lunar.getMonth();
+  var month = Math.abs(lunar.getMonth());
   var day = lunar.getDay();
   var hour = parseInt(document.getElementById('in-hour').value);
+  var hourZhi = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'][Math.floor(((hour+1)%24)/2)];
 
   var yearWt = CHENGGU_YEAR[yearGz] || '—';
   var monthWt = CHENGGU_MONTH[month] || '—';
@@ -1349,9 +1352,9 @@ function renderChengGu(lunar) {
 
   var html = '<table class="chenggu-table"><tr>';
   html += '<td>年柱 ' + yearGz + '</td><td>' + yearWt + '</td>';
-  html += '<td>月柱 ' + month + '月</td><td>' + monthWt + '</td>';
-  html += '<td>日柱 ' + day + '日</td><td>' + dayWt + '</td>';
-  html += '<td>时辰</td><td>' + hourWt + '</td>';
+  html += '<td>农历' + month + '月</td><td>' + monthWt + '</td>';
+  html += '<td>农历' + day + '日</td><td>' + dayWt + '</td>';
+  html += '<td>' + hourZhi + '时</td><td>' + hourWt + '</td>';
   html += '</tr><tr class="total-row">';
   html += '<td colspan="4">合计骨重（1两=10钱）</td>';
   html += '<td colspan="4"><span style="font-size:1.4rem;">' + totalStr + '</span></td>';
@@ -1366,7 +1369,7 @@ function renderChengGu(lunar) {
       html += lines[i] + '。<br>';
     }
     html += '</div>';
-    html += '<div class="desc">骨重 <b>' + totalStr + '</b> · 仅供参考，命由心造，福自我求。</div>';
+    html += '<div class="desc">骨重 <b>' + totalStr + '</b> · 传统民间算法，仅供娱乐参考，命自我立，福自己求。</div>';
     html += '</div>';
   }
 
@@ -1631,11 +1634,18 @@ function renderDailyAdvice(eightChar, lunar) {
     '水': { organ:'肾/膀胱', detail:'注意泌尿系统及骨骼健康，避免过劳。冬季尤需注意保暖养肾。', tip:'建议：多饮温水，不憋尿，节制房事，冬季早睡晚起。' }
   };
 
-  // 月份养生提醒
+  // 季节判断（基于节气，非公历月份）
+  // 立春约2/3-5  立夏约5/5-7  立秋约8/7-9  立冬约11/7-8
   var now = new Date();
-  var currentMonth = now.getMonth() + 1;
-  var seasonMap = { 1:'冬',2:'冬',3:'春',4:'春',5:'春',6:'夏',7:'夏',8:'夏',9:'秋',10:'秋',11:'秋',12:'冬' };
-  var season = seasonMap[currentMonth];
+  var m = now.getMonth() + 1;
+  var d = now.getDate();
+  // 节气日期（近似值，±1天浮动为正常）
+  var season, seasonRange, seasonExplain;
+  if (m < 2 || (m === 2 && d < 3)) { season = '冬'; seasonRange = '立冬后（11月-1月）'; seasonExplain = '当前处于立冬后、立春前，属冬季'; }
+  else if (m < 5 || (m === 5 && d < 5)) { season = '春'; seasonRange = '立春后（2月-4月）'; seasonExplain = '当前处于立春后、立夏前，属春季'; }
+  else if (m < 8 || (m === 8 && d < 7)) { season = '夏'; seasonRange = '立夏后（5月-7月）'; seasonExplain = '当前处于立夏后、立秋前，属夏季'; }
+  else if (m < 11 || (m === 11 && d < 7)) { season = '秋'; seasonRange = '立秋后（8月-10月）'; seasonExplain = '当前处于立秋后、立冬前，属秋季'; }
+  else { season = '冬'; seasonRange = '立冬后（11月-1月）'; seasonExplain = '当前处于立冬后、立春前，属冬季'; }
   var seasonAdvice = {
     '春':'春季属木，宜养肝。早睡早起，多踏青散步，保持心情舒畅。饮食宜清淡，少酸多甘。',
     '夏':'夏季属火，宜养心。午间小憩，避免暴晒。饮食宜清热解暑，适当补水，少苦多辛。',
@@ -1676,7 +1686,7 @@ function renderDailyAdvice(eightChar, lunar) {
   html += '<div class="sec-title">📋 日常注意事项</div>';
   html += '<div class="sec-body">';
   html += '<ul class="advice-list">';
-  html += '<li><b>当前季节（' + season + '季）</b>：' + seasonAdvice[season] + '</li>';
+  html += '<li><b>当前季节：' + season + '季 ' + seasonRange + '</b><br><span style="font-size:0.78rem;color:var(--text-dim);">' + seasonExplain + '（依二十四节气划分，非公历月份）</span><br>' + seasonAdvice[season] + '</li>';
 
   // 基于日主五行的建议
   var dayAdvice = {
@@ -1901,35 +1911,7 @@ function storeBaziContext(solar, lunar, eightChar, yun) {
 }
 
 function initChat() {
-  var key = localStorage.getItem('bazi_deepseek_key');
-  if (key) {
-    document.getElementById('chat-setup').style.display = 'none';
-    document.getElementById('chat-area').style.display = 'block';
-    document.getElementById('chat-apikey').value = key;
-  } else {
-    document.getElementById('chat-setup').style.display = 'block';
-    document.getElementById('chat-area').style.display = 'none';
-  }
-}
-
-function saveApiKey() {
-  var key = document.getElementById('chat-apikey').value.trim();
-  if (!key) { alert('请输入 API Key'); return; }
-  if (!key.startsWith('sk-')) { alert('API Key 格式不正确，应以 sk- 开头'); return; }
-  localStorage.setItem('bazi_deepseek_key', key);
-  document.getElementById('chat-setup').style.display = 'none';
-  document.getElementById('chat-area').style.display = 'block';
-  addChatMsg('ai', '你好！我已连接 DeepSeek AI，可以回答你关于当前命盘的任何问题。试试问我：这个八字的事业运势如何？');
-}
-
-function resetApiKey() {
-  if (confirm('确定要更换 API Key 吗？')) {
-    localStorage.removeItem('bazi_deepseek_key');
-    document.getElementById('chat-apikey').value = '';
-    document.getElementById('chat-setup').style.display = 'block';
-    document.getElementById('chat-area').style.display = 'none';
-    document.getElementById('chat-messages').innerHTML = '';
-  }
+  addChatMsg('ai', '排好了，有啥想问的？');
 }
 
 function addChatMsg(role, text) {
@@ -1946,9 +1928,6 @@ async function sendChat() {
   var question = input.value.trim();
   if (!question) return;
 
-  var key = localStorage.getItem('bazi_deepseek_key');
-  if (!key) { alert('请先设置 API Key'); return; }
-
   var loading = document.getElementById('chat-loading');
   var sendBtn = document.querySelector('#chat-area .btn');
 
@@ -1958,19 +1937,16 @@ async function sendChat() {
   sendBtn.disabled = true;
 
   try {
-    var systemPrompt = '你是一位精通中国传统命理的八字命理师，熟悉《渊海子平》《三命通会》《滴天髓》《穷通宝鉴》等经典。请基于以下八字信息，用中文回答用户的问题。回答要专业但不晦涩，通俗易懂。最后务必提醒"仅供参考娱乐，请勿当真"。\n\n' + chatBaziContext;
+    var systemPrompt = '你是一位资深的八字命理师傅，顾客都叫你"老师"。用口语化的方式给人看八字，像茶馆聊天一样自然。别用"首先、其次、综上所述"这种书面词。说人话，带点生活气，可以加"这个命啊""你看啊""说句实在话"这样的口头禅。分析要透但不啰嗦，像老师傅点拨徒弟，一两句到点子上。最后别忘了提醒一句"这都是参考，别太当真"。\n\n' + chatBaziContext;
 
-    var resp = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    var resp = await fetch('/.netlify/functions/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'deepseek-chat',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: question }
-        ],
-        max_tokens: 1200,
-        temperature: 0.7
+        ]
       })
     });
 
@@ -1978,20 +1954,12 @@ async function sendChat() {
     loading.style.display = 'none';
     sendBtn.disabled = false;
 
-    if (data.choices && data.choices[0]) {
-      addChatMsg('ai', data.choices[0].message.content);
-    } else if (data.error) {
-      var errMsg = data.error.message || '未知错误';
-      if (errMsg.indexOf('401') >= 0 || errMsg.indexOf('auth') >= 0 || errMsg.indexOf('key') >= 0) {
-        addChatMsg('ai', 'API Key 无效或已过期。请联系开发者获取有效的 API Key。');
-        resetApiKey();
-      } else if (errMsg.indexOf('429') >= 0 || errMsg.indexOf('rate') >= 0) {
-        addChatMsg('ai', '请求过于频繁，请稍后再试。');
-      } else if (errMsg.indexOf('503') >= 0 || errMsg.indexOf('overload') >= 0) {
-        addChatMsg('ai', 'DeepSeek 服务器繁忙，请稍后再试。');
-      } else {
-        addChatMsg('ai', '请求失败：' + errMsg);
-      }
+    if (data.success) {
+      var reply = data.content.replace(/^\*\*[^*]+\*\*\s*/,'').replace(/^\*[^*]+\*\s*/,'').trim();
+      addChatMsg('ai', reply);
+      saveChatLog(question, reply);
+    } else {
+      addChatMsg('ai', '这会儿卡住了，稍等再试。');
     }
   } catch (e) {
     loading.style.display = 'none';
@@ -2062,11 +2030,41 @@ function renderAdminTable() {
   }
   if (!h) h = '<tr><td colspan="5" style="padding:20px;text-align:center;color:var(--text-dim);">暂无记录</td></tr>';
   document.getElementById('admin-tbody').innerHTML = h;
+  renderChatLogTable();
+}
+
+function saveChatLog(question, answer) {
+  var logs = JSON.parse(localStorage.getItem('_bz_chats') || '[]');
+  logs.push({ id: Date.now(), q: question, a: answer, time: new Date().toLocaleString('zh-CN') });
+  if (logs.length > 200) logs = logs.slice(-200);
+  localStorage.setItem('_bz_chats', JSON.stringify(logs));
+}
+
+function renderChatLogTable() {
+  var logs = JSON.parse(localStorage.getItem('_bz_chats') || '[]').reverse();
+  var tb = document.getElementById('admin-chat-tbody');
+  if (!tb) return;
+  var h = '';
+  for (var i = 0; i < logs.length; i++) {
+    var l = logs[i];
+    h += '<tr style="border-bottom:1px solid rgba(180,140,60,0.15);color:var(--text-dim);">' +
+      '<td style="padding:8px;">' + (i+1) + '</td>' +
+      '<td style="padding:8px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + l.q.replace(/"/g,'&quot;') + '">' + l.q.substring(0,40) + '</td>' +
+      '<td style="padding:8px;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + l.a.replace(/"/g,'&quot;') + '">' + l.a.substring(0,60) + '</td>' +
+      '<td style="padding:8px;font-size:0.78rem;">' + l.time + '</td>' +
+      '</tr>';
+  }
+  if (!h) h = '<tr><td colspan="4" style="padding:20px;text-align:center;color:var(--text-dim);">暂无问答记录</td></tr>';
+  tb.innerHTML = h;
+  var cnt = document.getElementById('admin-chat-count');
+  if (cnt) cnt.textContent = logs.length;
 }
 
 function clearAdminLogs() {
   if (prompt('输入管理员密码确认清空：') !== ADMIN_PWD) { alert('密码错误'); return; }
-  if (confirm('确定清空所有记录？不可恢复。')) { localStorage.removeItem('_bz_inputs'); renderAdminTable(); alert('已清空'); }
+  if (confirm('确定清空所有排盘记录？')) { localStorage.removeItem('_bz_inputs'); alert('已清空'); }
+  if (confirm('同时清空问答记录？')) { localStorage.removeItem('_bz_chats'); }
+  renderAdminTable();
 }
 
 function exportAdminLogs() {
