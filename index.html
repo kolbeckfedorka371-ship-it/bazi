@@ -1254,10 +1254,10 @@ var CHENGGU_DAY = {
 };
 
 var CHENGGU_HOUR = {
-  0:'1两6钱',1:'6钱',2:'7钱',3:'1两',4:'9钱',5:'1两6钱',
-  6:'1两',7:'8钱',8:'8钱',9:'9钱',10:'6钱',11:'6钱',
-  12:'1两6钱',13:'6钱',14:'7钱',15:'1两',16:'9钱',17:'1两6钱',
-  18:'1两',19:'8钱',20:'8钱',21:'9钱',22:'6钱',23:'6钱'
+  0:'1两6钱',1:'6钱',2:'6钱',3:'7钱',4:'7钱',5:'1两',6:'1两',
+  7:'9钱',8:'9钱',9:'1两6钱',10:'1两6钱',11:'1两',12:'1两',
+  13:'8钱',14:'8钱',15:'8钱',16:'8钱',17:'9钱',18:'9钱',
+  19:'6钱',20:'6钱',21:'6钱',22:'6钱',23:'1两6钱'
 };
 
 function cgToLiang(str) {
@@ -1942,30 +1942,15 @@ async function sendChat() {
     var resp = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer sk-c96f3f7044e34a70be197a2b1270fd52' },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: question }
-        ],
-        max_tokens: 1200,
-        temperature: 0.7
-      })
+      body: JSON.stringify({ model:'deepseek-chat', messages:[{role:'system',content:systemPrompt},{role:'user',content:question}], max_tokens:1200, temperature:0.7 })
     });
-
     var data = await resp.json();
-    loading.style.display = 'none';
-    sendBtn.disabled = false;
-
+    loading.style.display = 'none'; sendBtn.disabled = false;
     if (data.choices && data.choices[0]) {
       var reply = data.choices[0].message.content.replace(/^\*\*[^*]+\*\*\s*/,'').replace(/^\*[^*]+\*\s*/,'').trim();
-      addChatMsg('ai', reply);
-      saveChatLog(question, reply);
-    } else if (data.error) {
-      var em = data.error.message || '';
-      if (em.indexOf('429')>=0||em.indexOf('rate')>=0) addChatMsg('ai','问太快了，喘口气再试。');
-      else if (em.indexOf('503')>=0||em.indexOf('overload')>=0) addChatMsg('ai','这会儿人多，稍等就行。');
-      else addChatMsg('ai','稍等重试一下。');
+      addChatMsg('ai', reply); saveChatLog(question, reply);
+    } else {
+      addChatMsg('ai','稍等重试一下。');
     }
   } catch (e) {
     loading.style.display = 'none';
