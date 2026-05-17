@@ -1939,14 +1939,17 @@ async function sendChat() {
   try {
     var systemPrompt = '你是一位资深的八字命理师傅，顾客都叫你"老师"。用口语化的方式给人看八字，像茶馆聊天一样自然。别用"首先、其次、综上所述"这种书面词。说人话，带点生活气，可以加"这个命啊""你看啊""说句实在话"这样的口头禅。分析要透但不啰嗦，像老师傅点拨徒弟，一两句到点子上。最后别忘了提醒一句"这都是参考，别太当真"。\n\n' + chatBaziContext;
 
-    var resp = await fetch('/.netlify/functions/chat', {
+    var resp = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer sk-c96f3f7044e34a70be197a2b1270fd52' },
       body: JSON.stringify({
+        model: 'deepseek-chat',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: question }
-        ]
+        ],
+        max_tokens: 1200,
+        temperature: 0.7
       })
     });
 
@@ -1954,12 +1957,15 @@ async function sendChat() {
     loading.style.display = 'none';
     sendBtn.disabled = false;
 
-    if (data.success) {
-      var reply = data.content.replace(/^\*\*[^*]+\*\*\s*/,'').replace(/^\*[^*]+\*\s*/,'').trim();
+    if (data.choices && data.choices[0]) {
+      var reply = data.choices[0].message.content.replace(/^\*\*[^*]+\*\*\s*/,'').replace(/^\*[^*]+\*\s*/,'').trim();
       addChatMsg('ai', reply);
       saveChatLog(question, reply);
-    } else {
-      addChatMsg('ai', '这会儿卡住了，稍等再试。');
+    } else if (data.error) {
+      var em = data.error.message || '';
+      if (em.indexOf('429')>=0||em.indexOf('rate')>=0) addChatMsg('ai','问太快了，喘口气再试。');
+      else if (em.indexOf('503')>=0||em.indexOf('overload')>=0) addChatMsg('ai','这会儿人多，稍等就行。');
+      else addChatMsg('ai','稍等重试一下。');
     }
   } catch (e) {
     loading.style.display = 'none';
