@@ -1266,6 +1266,8 @@ function cgToLiang(str) {
   if (m) return parseInt(m[1]) + parseInt(m[2]) * 0.1;
   m = str.match(/(\d+)钱/);
   if (m) return parseInt(m[1]) * 0.1;
+  m = str.match(/(\d+)两/);
+  if (m) return parseInt(m[1]);
   return 0;
 }
 
