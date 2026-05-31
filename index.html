@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>命理玄学 - 八字·黄历·塔罗</title>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.min.js"></script>
+<style>
+/* ===================== RESET & BASE ===================== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Serif SC','ZCOOL XiaoWei',serif;
+  background:linear-gradient(135deg,#0a0305 0%,#1a080c 50%,#0d0508 100%);
+  color:#f0d68a;min-height:100vh;overflow-x:hidden;
+  line-height:1.6;
+}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0305}
+::-webkit-scrollbar-thumb{background:#d4a843;border-radius:3px}
+
+/* ===================== PARTICLES ===================== */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+/* ===================== LAYOUT ===================== */
+.app{position:relative;z-index:1;min-height:100vh}
+
+/* ===================== NAVIGATION ===================== */
+.top-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;
+  background:rgba(10,3,5,0.8);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(212,168,67,0.15);
+  position:sticky;top:0;z-index:100;
+}
+.logo{font-family:'Ma Shan Zheng',cursive;font-size:28px;color:#d4a843;text-shadow:0 0 20px rgba(212,168,67,0.3)}
+.back-btn{
+  background:linear-gradient(135deg,rgba(212,168,67,0.15),rgba(212,168,67,0.05));
+  border:1px solid rgba(212,168,67,0.3);
+  color:#d4a843;padding:8px 20px;border-radius:24px;cursor:pointer;
+  font-family:'Noto Serif SC',serif;font-size:14px;
+  transition:all 0.3s;display:none;
+}
+.back-btn:hover{background:rgba(212,168,67,0.25);border-color:#d4a843}
+.back-btn.visible{display:inline-block}
+
+/* ===================== VIEWS ===================== */
+.view{
+  display:none;opacity:0;
+  transition:opacity 0.5s ease,transform 0.5s ease;
+  transform:translateX(40px);padding:24px;max-width:1200px;margin:0 auto;
+}
+.view.active{display:block;opacity:1;transform:translateX(0)}
+
+/* ===================== HOME CARDS ===================== */
+.home-title{
+  text-align:center;padding:60px 0 20px;
+  font-family:'Ma Shan Zheng',cursive;font-size:clamp(36px,6vw,64px);
+  background:linear-gradient(135deg,#d4a843,#f0d68a,#d4a843);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  text-shadow:none;
+}
+.home-subtitle{
+  text-align:center;color:rgba(240,214,138,0.6);font-size:16px;margin-bottom:50px;
+  font-family:'ZCOOL XiaoWei',serif;
+}
+.cards-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:24px;padding:0 20px 60px;max-width:1000px;margin:0 auto;
+}
+.module-card{
+  background:linear-gradient(145deg,rgba(26,8,12,0.8),rgba(10,3,5,0.9));
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(212,168,67,0.2);
+  border-radius:20px;padding:48px 32px;text-align:center;
+  cursor:pointer;transition:all 0.4s cubic-bezier(.25,.8,.25,1);
+  position:relative;overflow:hidden;
+}
+.module-card::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle,rgba(212,168,67,0.06) 0%,transparent 70%);
+  transition:all 0.6s;opacity:0;
+}
+.module-card:hover::before{opacity:1}
+.module-card:hover{
+  transform:translateY(-8px);
+  border-color:rgba(212,168,67,0.5);
+  box-shadow:0 20px 60px rgba(212,168,67,0.1),0 0 40px rgba(212,168,67,0.05);
+}
+.module-card .icon{font-size:56px;display:block;margin-bottom:20px;filter:drop-shadow(0 0 12px rgba(212,168,67,0.3))}
+.module-card h2{
+  font-family:'Ma Shan Zheng',cursive;font-size:28px;color:#d4a843;margin-bottom:12px;
+}
+.module-card p{color:rgba(240,214,138,0.6);font-size:14px;line-height:1.8}
+
+/* ===================== GLASSMORPHISM PANEL ===================== */
+.glass-panel{
+  background:linear-gradient(145deg,rgba(26,8,12,0.7),rgba(10,3,5,0.85));
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(212,168,67,0.15);
+  border-radius:16px;padding:28px;margin-bottom:24px;
+}
+.glass-panel h3{
+  font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#d4a843;
+  margin-bottom:16px;padding-bottom:12px;
+  border-bottom:1px solid rgba(212,168,67,0.1);
+}
+
+/* ===================== FORM STYLES ===================== */
+.form-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px;align-items:end}
+.form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+.form-group label{font-size:12px;color:rgba(240,214,138,0.6)}
+.form-group input,.form-group select{
+  background:rgba(26,8,12,0.6);border:1px solid rgba(212,168,67,0.2);
+  border-radius:8px;padding:10px 14px;color:#f0d68a;font-size:15px;
+  font-family:'Noto Serif SC',serif;transition:border-color 0.3s;
+  outline:none;
+}
+.form-group input:focus,.form-group select:focus{border-color:#d4a843}
+.form-group select option{background:#1a080c;color:#f0d68a}
+.btn{
+  background:linear-gradient(135deg,#d4a843,#b8922e);
+  color:#0a0305;border:none;padding:12px 32px;border-radius:8px;
+  font-family:'Noto Serif SC',serif;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all 0.3s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(212,168,67,0.3)}
+
+/* ===================== PILLAR DISPLAY ===================== */
+.pillars-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+.pillar-box{
+  text-align:center;background:rgba(212,168,67,0.05);
+  border:1px solid rgba(212,168,67,0.15);border-radius:12px;padding:16px 8px;
+}
+.pillar-label{font-size:12px;color:rgba(240,214,138,0.5);margin-bottom:8px}
+.pillar-gan{
+  font-family:'Ma Shan Zheng',cursive;font-size:36px;color:#d4a843;
+  text-shadow:0 0 16px rgba(212,168,67,0.3);line-height:1.2;
+}
+.pillar-zhi{
+  font-family:'Ma Shan Zheng',cursive;font-size:36px;color:#f0d68a;
+  text-shadow:0 0 16px rgba(240,214,138,0.3);line-height:1.2;
+}
+.pillar-tg{font-size:12px;color:rgba(240,214,138,0.5);margin-top:8px}
+
+/* ===================== ELEMENT BARS ===================== */
+.elements-chart{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.element-row{display:flex;align-items:center;gap:12px}
+.element-label{width:40px;font-family:'Ma Shan Zheng',cursive;font-size:20px;text-align:center}
+.element-bar-wrap{flex:1;height:24px;background:rgba(0,0,0,0.3);border-radius:12px;overflow:hidden}
+.element-bar{height:100%;border-radius:12px;transition:width 1s cubic-bezier(.25,.8,.25,1);min-width:0}
+.element-count{width:24px;font-size:14px;text-align:center;color:rgba(240,214,138,0.7)}
+
+.el-木 .element-label{color:#4caf50}.el-木 .element-bar{background:linear-gradient(90deg,#2e7d32,#66bb6a)}
+.el-火 .element-label{color:#f44336}.el-火 .element-bar{background:linear-gradient(90deg,#c62828,#ef5350)}
+.el-土 .element-label{color:#ff9800}.el-土 .element-bar{background:linear-gradient(90deg,#e65100,#ffa726)}
+.el-金 .element-label{color:#f0d68a}.el-金 .element-bar{background:linear-gradient(90deg,#b8922e,#f0d68a)}
+.el-水 .element-label{color:#42a5f5}.el-水 .element-bar{background:linear-gradient(90deg,#1565c0,#42a5f5)}
+
+/* ===================== TEN GODS TABLE ===================== */
+.ten-gods-table{width:100%;border-collapse:collapse;margin:16px 0}
+.ten-gods-table th,.ten-gods-table td{
+  padding:12px 8px;text-align:center;
+  border:1px solid rgba(212,168,67,0.1);font-size:14px;
+}
+.ten-gods-table th{color:#d4a843;font-weight:400;font-size:13px;background:rgba(212,168,67,0.05)}
+.ten-gods-table td{color:#f0d68a}
+
+/* ===================== CALENDAR ===================== */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.cal-nav{display:flex;gap:8px;align-items:center}
+.cal-nav button{
+  background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.2);
+  color:#d4a843;width:36px;height:36px;border-radius:50%;cursor:pointer;
+  font-size:18px;transition:all 0.3s;display:flex;align-items:center;justify-content:center;
+}
+.cal-nav button:hover{background:rgba(212,168,67,0.2)}
+.cal-month-title{font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#d4a843}
+.cal-search{
+  background:rgba(26,8,12,0.6);border:1px solid rgba(212,168,67,0.2);
+  border-radius:8px;padding:8px 14px;color:#f0d68a;font-size:14px;
+  font-family:'Noto Serif SC',serif;outline:none;width:180px;
+}
+.cal-search:focus{border-color:#d4a843}
+.cal-grid{
+  display:grid;grid-template-columns:repeat(7,1fr);gap:4px;
+}
+.cal-day-header{
+  text-align:center;padding:8px;color:#d4a843;font-size:13px;
+  border-bottom:1px solid rgba(212,168,67,0.1);
+}
+.cal-day{
+  background:rgba(26,8,12,0.4);border:1px solid rgba(212,168,67,0.08);
+  border-radius:8px;padding:6px;min-height:64px;cursor:pointer;
+  transition:all 0.3s;position:relative;
+}
+.cal-day:hover{border-color:rgba(212,168,67,0.3);transform:scale(1.02)}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.empty:hover{transform:none}
+.cal-day.today{border-color:#d4a843;box-shadow:0 0 12px rgba(212,168,67,0.2)}
+.cal-day.auspicious{border-color:rgba(76,175,80,0.4)}
+.cal-day.inauspicious{border-color:rgba(244,67,54,0.3)}
+.cal-day.highlight{border-color:#d4a843!important;box-shadow:0 0 16px rgba(212,168,67,0.3)!important}
+.cal-day .solar{font-size:14px;color:#f0d68a}
+.cal-day .lunar{font-size:10px;color:rgba(240,214,138,0.5)}
+.cal-day .yi-ji-summary{font-size:9px;color:rgba(240,214,138,0.4);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cal-day.selected{border-color:#d4a843;background:rgba(212,168,67,0.08)}
+
+/* ===================== DAY DETAIL ===================== */
+.day-detail{
+  margin-top:20px;animation:fadeSlideUp 0.4s ease;
+}
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.detail-item{background:rgba(212,168,67,0.03);border-radius:8px;padding:12px}
+.detail-item .label{font-size:12px;color:rgba(240,214,138,0.5);margin-bottom:4px}
+.detail-item .value{font-size:16px;color:#d4a843}
+.yi-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.yi-tag{
+  display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;
+}
+.yi-tag.yi{background:rgba(76,175,80,0.15);color:#81c784;border:1px solid rgba(76,175,80,0.3)}
+.yi-tag.ji{background:rgba(244,67,54,0.1);color:#ef9a9a;border:1px solid rgba(244,67,54,0.2)}
+
+/* ===================== TAROT ===================== */
+/* ===== TAROT SECTION - Mystical Theme ===== */
+#view-tarot{
+  background:radial-gradient(ellipse at 50% 30%,rgba(40,10,50,0.4) 0%,transparent 70%);
+}
+#view-tarot .glass-panel{
+  border-color:rgba(160,100,200,0.2);
+}
+#view-tarot h3{
+  background:linear-gradient(180deg,#e8d0f0 20%,#a060c0 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-shadow:none;font-size:2rem;letter-spacing:0.15em;
+}
+#view-tarot .text-muted{color:rgba(200,180,220,0.6)}
+
+/* Spread selection */
+.spread-options{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:30px 0}
+.spread-option{
+  background:linear-gradient(145deg,rgba(30,15,40,0.8),rgba(15,5,25,0.9));
+  border:1px solid rgba(160,100,200,0.25);border-radius:20px;
+  padding:40px 24px;text-align:center;cursor:pointer;transition:all 0.5s;
+  position:relative;overflow:hidden;
+}
+.spread-option::before{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle,rgba(160,100,200,0.08) 0%,transparent 60%);
+  opacity:0;transition:opacity 0.5s;
+}
+.spread-option:hover::before{opacity:1}
+.spread-option:hover{
+  transform:translateY(-8px);border-color:rgba(160,100,200,0.5);
+  box-shadow:0 16px 50px rgba(100,50,150,0.2),0 0 30px rgba(160,100,200,0.1);
+}
+.spread-option .icon{font-size:48px;display:block;margin-bottom:16px;filter:drop-shadow(0 0 10px rgba(160,100,200,0.4))}
+.spread-option h4{font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#c8a0e0;margin-bottom:10px;letter-spacing:0.08em}
+.spread-option p{font-size:13px;color:rgba(200,180,220,0.5);line-height:1.6}
+
+/* Tarot table / cards area */
+.tarot-table{
+  display:flex;flex-wrap:wrap;gap:20px;justify-content:center;
+  padding:30px 0;min-height:250px;
+  perspective:1200px;
+}
+.tarot-card-wrap{
+  perspective:1000px;width:130px;height:200px;cursor:pointer;
+  transition:all 0.4s;
+}
+.tarot-card-inner{
+  position:relative;width:100%;height:100%;
+  transition:transform 0.9s cubic-bezier(.25,.8,.25,1);
+  transform-style:preserve-3d;
+}
+.tarot-card-inner.flipped{transform:rotateY(180deg)}
+.tarot-card-face,.tarot-card-back{
+  position:absolute;width:100%;height:100%;
+  backface-visibility:hidden;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+
+/* Card Back - Ornate Mystical Design */
+.tarot-card-back{
+  background:linear-gradient(145deg,#1a0a20,#0d0515);
+  border:2px solid rgba(160,100,200,0.4);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5),inset 0 0 30px rgba(160,100,200,0.05);
+  overflow:hidden;
+}
+.tarot-card-back::before{
+  content:'';position:absolute;top:8px;left:8px;right:8px;bottom:8px;
+  border:1px solid rgba(160,100,200,0.3);border-radius:8px;
+}
+.tarot-card-back::after{
+  content:'';position:absolute;top:15px;left:15px;right:15px;bottom:15px;
+  border:1px solid rgba(160,100,200,0.15);border-radius:6px;
+  background:
+    repeating-conic-gradient(rgba(160,100,200,0.06) 0deg 10deg,transparent 10deg 20deg) center/80% 80% no-repeat;
+}
+.tarot-card-back .back-design{
+  position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.tarot-card-back .back-moon{
+  font-size:28px;color:#c8a0e0;text-shadow:0 0 20px rgba(200,160,224,0.6);
+  animation:mysticPulse 3s ease-in-out infinite;
+}
+.tarot-card-back .back-stars{
+  font-size:10px;color:rgba(200,160,224,0.5);letter-spacing:4px;
+}
+.tarot-card-back .back-line{
+  width:60px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,160,224,0.4),transparent);
+}
+@keyframes mysticPulse{
+  0%,100%{text-shadow:0 0 20px rgba(200,160,224,0.4);transform:scale(1)}
+  50%{text-shadow:0 0 30px rgba(200,160,224,0.7);transform:scale(1.05)}
+}
+
+/* Card Front - Ornate Design */
+.tarot-card-face{
+  background:linear-gradient(145deg,#faf5f0,#f0e8d8);
+  border:2px solid #b8960a;
+  transform:rotateY(180deg);
+  color:#1a080c;
+  padding:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);
+  position:relative;overflow:hidden;
+}
+.tarot-card-face::before{
+  content:'';position:absolute;top:6px;left:6px;right:6px;bottom:6px;
+  border:1px solid rgba(180,150,10,0.3);border-radius:6px;pointer-events:none;
+}
+.tarot-card-face.reversed-card{transform:rotateY(180deg) rotate(180deg)}
+.tarot-card-face .card-numeral{
+  font-size:11px;color:#8b6914;position:absolute;top:8px;left:10px;
+  font-family:'Noto Serif SC',serif;font-weight:700;
+}
+.tarot-card-face .card-numeral-br{
+  font-size:11px;color:#8b6914;position:absolute;bottom:8px;right:10px;
+  font-family:'Noto Serif SC',serif;font-weight:700;transform:rotate(180deg);
+}
+.tarot-card-face .card-suit{font-size:30px;margin:6px 0}
+.tarot-card-face .card-name-cn{
+  font-size:13px;font-weight:700;color:#2a1018;margin-top:2px;
+  font-family:'Ma Shan Zheng',cursive;letter-spacing:0.05em;
+}
+.tarot-card-face .card-name-en{font-size:8px;color:#8b6914;margin-top:1px}
+.tarot-card-face .card-symbol{
+  font-size:36px;flex:1;display:flex;align-items:center;justify-content:center;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+.tarot-card-face .card-border-deco{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  border:3px solid transparent;border-image:linear-gradient(135deg,#b8960a,#d4a843,#b8960a) 1;
+  border-radius:10px;pointer-events:none;
+}
+
+.tarot-card-wrap:hover .tarot-card-inner:not(.flipped){
+  transform:translateY(-10px) scale(1.02);
+}
+.tarot-card-wrap:hover{
+  filter:drop-shadow(0 8px 20px rgba(160,100,200,0.3));
+}
+
+/* Glow effect when card is revealed */
+.tarot-card-inner.flipped .tarot-card-face{
+  animation:cardRevealGlow 1s ease-out;
+}
+@keyframes cardRevealGlow{
+  0%{box-shadow:0 0 40px rgba(200,160,224,0.6),0 4px 20px rgba(0,0,0,0.4)}
+  100%{box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+}
+
+/* Spread position labels */
+.spread-position-label{
+  font-size:11px;color:rgba(200,180,220,0.6);text-align:center;
+  margin-top:6px;font-family:'ZCOOL XiaoWei',serif;letter-spacing:0.05em;
+}
+
+/* Reading panel */
+.reading-panel{margin-top:28px;animation:fadeSlideUp 0.4s ease}
+.card-reading{
+  background:linear-gradient(145deg,rgba(30,15,40,0.6),rgba(15,5,25,0.4));
+  border:1px solid rgba(160,100,200,0.15);border-radius:14px;
+  padding:22px;margin-bottom:14px;
+  transition:all 0.3s;
+}
+.card-reading:hover{
+  border-color:rgba(160,100,200,0.3);
+  box-shadow:0 4px 20px rgba(100,50,150,0.1);
+}
+.card-reading .card-title{
+  font-family:'Ma Shan Zheng',cursive;font-size:22px;color:#c8a0e0;margin-bottom:6px;
+}
+.card-reading .card-position{font-size:12px;color:rgba(200,180,220,0.5);margin-bottom:8px}
+.card-reading .card-orientation{font-size:14px;margin-bottom:8px;font-weight:700}
+.card-reading .card-orientation.upright{color:#a0d8a0}
+.card-reading .card-orientation.reversed{color:#e08080}
+.card-reading .card-meaning{font-size:14px;color:rgba(220,200,240,0.8);line-height:1.9}
+.overall-reading{
+  background:linear-gradient(145deg,rgba(160,100,200,0.1),rgba(100,50,150,0.05));
+  border:1px solid rgba(160,100,200,0.25);border-radius:18px;
+  padding:28px;margin-top:24px;
+  position:relative;overflow:hidden;
+}
+.overall-reading::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(160,100,200,0.5),transparent);
+}
+.overall-reading h3{
+  font-family:'Ma Shan Zheng',cursive;font-size:26px;
+  background:linear-gradient(180deg,#e0c0f0 20%,#a060c0 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:14px;letter-spacing:0.1em;
+}
+
+.reset-btn{
+  background:linear-gradient(145deg,rgba(160,100,200,0.15),rgba(100,50,150,0.1));
+  border:1px solid rgba(160,100,200,0.3);
+  color:#c8a0e0;padding:12px 28px;border-radius:10px;cursor:pointer;
+  font-family:'Noto Serif SC',serif;font-size:14px;margin-top:20px;transition:all 0.3s;
+  letter-spacing:0.05em;
+}
+.reset-btn:hover{
+  background:linear-gradient(145deg,rgba(160,100,200,0.25),rgba(100,50,150,0.2));
+  box-shadow:0 4px 20px rgba(100,50,150,0.2);
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:768px){
+  .pillars-row{grid-template-columns:repeat(2,1fr)}
+  .cards-grid{grid-template-columns:1fr}
+  .tarot-card-wrap{width:100px;height:155px}
+  .tarot-card-face .card-symbol{font-size:26px}
+  .tarot-card-face .card-numeral{font-size:9px}
+  .tarot-card-face .card-name-cn{font-size:11px}
+  .spread-options{grid-template-columns:1fr;gap:16px}
+  .form-row{flex-direction:column}
+  .form-group{min-width:100%}
+  .detail-grid{grid-template-columns:1fr}
+  .cal-grid{gap:2px}
+  .cal-day{min-height:50px;padding:4px}
+  .cal-day .solar{font-size:12px}
+  .cal-day .lunar{font-size:9px}
+  .cal-day .yi-ji-summary{display:none}
+  .home-title{padding-top:30px}
+}
+@media(max-width:480px){
+  .top-bar{padding:12px 16px}
+  .logo{font-size:22px}
+  .view{padding:16px}
+  .glass-panel{padding:20px 16px}
+}
+
+/* ===================== MISC ===================== */
+.zodiac-badge{
+  display:inline-block;background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.2);
+  border-radius:20px;padding:4px 16px;font-size:14px;color:#d4a843;margin:8px 0;
+}
+.strength-tag{
+  display:inline-block;padding:6px 16px;border-radius:20px;font-size:14px;margin:8px 0;
+}
+.strength-tag.strong{background:rgba(244,67,54,0.1);color:#ef9a9a;border:1px solid rgba(244,67,54,0.2)}
+.strength-tag.weak{background:rgba(66,165,245,0.1);color:#90caf9;border:1px solid rgba(66,165,245,0.2)}
+.strength-tag.balanced{background:rgba(76,175,80,0.1);color:#81c784;border:1px solid rgba(76,175,80,0.2)}
+.god-pan{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.god-item{background:rgba(212,168,67,0.03);border-radius:8px;padding:10px;text-align:center}
+.god-item .god-label{font-size:11px;color:rgba(240,214,138,0.5)}
+.god-item .god-value{font-size:15px;color:#d4a843;margin-top:2px}
+.section-title-sm{font-size:16px;color:#d4a843;margin:16px 0 8px;font-family:'ZCOOL XiaoWei',serif}
+.text-muted{color:rgba(240,214,138,0.5);font-size:13px}
+.mb-16{margin-bottom:16px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="app">
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="logo">命理玄学</div>
+    <button class="back-btn" id="backBtn" onclick="showView('home')">← 返回首页</button>
+  </div>
+
+  <!-- HOME -->
+  <div class="view active" id="view-home">
+    <h1 class="home-title">天命所归 · 洞察先机</h1>
+    <p class="home-subtitle">融合传统命理智慧与现代科技，为您揭示命运密码</p>
+    <div class="cards-grid">
+      <div class="module-card" onclick="showView('bazi')">
+        <span class="icon">☯</span>
+        <h2>八字命理</h2>
+        <p>输入生辰，解读四柱八字、五行喜忌、大运流年</p>
+      </div>
+      <div class="module-card" onclick="showView('calendar')">
+        <span class="icon">📅</span>
+        <h2>黄历择吉</h2>
+        <p>每日宜忌、黄道吉日、吉时查询、择日助手</p>
+      </div>
+      <div class="module-card" onclick="showView('tarot')">
+        <span class="icon">🃏</span>
+        <h2>塔罗占卜</h2>
+        <p>牌阵选择、翻牌占卜、牌义解读、命运启示</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BAZI MODULE -->
+  <div class="view" id="view-bazi">
+    <div class="glass-panel">
+      <h3>☯ 八字命理排盘</h3>
+      <div class="form-row">
+        <div class="form-group"><label>年</label><input type="number" id="bz-year" min="1900" max="2100" placeholder="1990"></div>
+        <div class="form-group"><label>月</label><input type="number" id="bz-month" min="1" max="12" placeholder="6"></div>
+        <div class="form-group"><label>日</label><input type="number" id="bz-day" min="1" max="31" placeholder="15"></div>
+        <div class="form-group"><label>时(0-23)</label><input type="number" id="bz-hour" min="0" max="23" placeholder="8"></div>
+        <div class="form-group"><label>分</label><input type="number" id="bz-minute" min="0" max="59" placeholder="30"></div>
+        <div class="form-group"><label>性别</label><select id="bz-gender"><option value="male">男</option><option value="female">女</option></select></div>
+      </div>
+      <button class="btn" onclick="calculateBazi()">开始排盘</button>
+    </div>
+    <div id="bazi-result" class="hidden"></div>
+  </div>
+
+  <!-- CALENDAR MODULE -->
+  <div class="view" id="view-calendar">
+    <div class="glass-panel">
+      <h3>📅 黄历择吉</h3>
+      <div class="cal-header">
+        <div class="cal-nav">
+          <button onclick="calNav(-1)">‹</button>
+          <span class="cal-month-title" id="cal-title"></span>
+          <button onclick="calNav(1)">›</button>
+        </div>
+        <input type="text" class="cal-search" id="cal-search" placeholder="搜索宜忌关键词..." oninput="calSearch()">
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div id="day-detail-container"></div>
+  </div>
+
+  <!-- TAROT MODULE -->
+  <div class="view" id="view-tarot">
+    <div class="glass-panel">
+      <h3>🃏 塔罗占卜</h3>
+      <p class="text-muted mb-16" style="font-family:'ZCOOL XiaoWei',serif;font-size:15px;letter-spacing:0.08em">
+        静心冥想你的问题，选择牌阵，命运之轮即将转动
+      </p>
+      <div id="spread-select">
+        <div class="spread-options">
+          <div class="spread-option" onclick="startTarot(1)">
+            <span class="icon">🌟</span>
+            <h4>单牌速占</h4>
+            <p>一张牌，一个答案<br>快速获得宇宙指引</p>
+          </div>
+          <div class="spread-option" onclick="startTarot(3)">
+            <span class="icon">🔺</span>
+            <h4>三牌阵</h4>
+            <p>过去 · 现在 · 未来<br>洞察时间之流的奥秘</p>
+          </div>
+          <div class="spread-option" onclick="startTarot(10)">
+            <span class="icon">✨</span>
+            <h4>凯尔特十字</h4>
+            <p>十张牌深度解读<br>全面揭示命运密码</p>
+          </div>
+        </div>
+      </div>
+      <div id="tarot-play" class="hidden"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== PARTICLES =====================
+(function(){
+  const c=document.getElementById('particles'),ctx=c.getContext('2d');
+  let w,h,particles=[];
+  function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
+  resize();window.addEventListener('resize',resize);
+  for(let i=0;i<60;i++){
+    particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+0.5,
+      dx:(Math.random()-0.5)*0.3,dy:-Math.random()*0.3-0.1,
+      o:Math.random()*0.4+0.1});
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(212,168,67,${p.o})`;ctx.fill();
+      p.x+=p.dx;p.y+=p.dy;
+      if(p.y<-10){p.y=h+10;p.x=Math.random()*w}
+      if(p.x<-10)p.x=w+10;if(p.x>w+10)p.x=-10;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===================== VIEW NAVIGATION =====================
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>{v.classList.remove('active')});
+  const el=document.getElementById('view-'+name);
+  // slight delay for transition effect
+  setTimeout(()=>el.classList.add('active'),50);
+  const bb=document.getElementById('backBtn');
+  if(name==='home'){bb.classList.remove('visible');document.title='命理玄学 - 八字·黄历·塔罗'}
+  else{bb.classList.add('visible');
+    if(name==='bazi')document.title='八字命理 - 命理玄学';
+    else if(name==='calendar'){document.title='黄历择吉 - 命理玄学';initCalendar()}
+    else if(name==='tarot'){document.title='塔罗占卜 - 命理玄学';resetTarot()}
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===================== ELEMENT HELPERS =====================
+const STEM_ELEMENT={'甲':'木','乙':'木','丙':'火','丁':'火','戊':'土','己':'土','庚':'金','辛':'金','壬':'水','癸':'水'};
+const BRANCH_ELEMENT={'子':'水','丑':'土','寅':'木','卯':'木','辰':'土','巳':'火','午':'火','未':'土','申':'金','酉':'金','戌':'土','亥':'水'};
+const STEM_POLARITY={'甲':'阳','乙':'阴','丙':'阳','丁':'阴','戊':'阳','己':'阴','庚':'阳','辛':'阴','壬':'阳','癸':'阴'};
+const ELEMENTS=['木','火','土','金','水'];
+const GENERATE={'木':'火','火':'土','土':'金','金':'水','水':'木'};
+const CONTROL={'木':'土','火':'金','土':'水','金':'木','水':'火'};
+
+function getElement(stem){return STEM_ELEMENT[stem]||''}
+function getPolarity(stem){return STEM_POLARITY[stem]||''}
+function getBranchElement(branch){return BRANCH_ELEMENT[branch]||''}
+
+function getTenGod(dayStem,otherStem){
+  const de=getElement(dayStem),oe=getElement(otherStem);
+  const dp=getPolarity(dayStem),op=getPolarity(otherStem);
+  const samePol=dp===op;
+  if(de===oe)return samePol?'比肩':'劫财';
+  if(GENERATE[de]===oe)return samePol?'食神':'伤官';
+  if(GENERATE[oe]===de)return samePol?'偏印':'正印';
+  if(CONTROL[de]===oe)return samePol?'偏财':'正财';
+  if(CONTROL[oe]===de)return samePol?'偏官':'正官';
+  return '—';
+}
+
+// ===================== BAZI CALCULATION =====================
+function calculateBazi(){
+  const y=+document.getElementById('bz-year').value;
+  const m=+document.getElementById('bz-month').value;
+  const d=+document.getElementById('bz-day').value;
+  const h=+document.getElementById('bz-hour').value;
+  const mi=+document.getElementById('bz-minute').value;
+  const gender=document.getElementById('bz-gender').value;
+  if(!y||!m||!d){alert('请输入完整的出生日期');return}
+  if(h<0||h>23){alert('请输入有效小时(0-23)');return}
+
+  try{
+    const solar=Solar.fromYmdHms(y,m,d,h,mi,0);
+    const lunar=solar.getLunar();
+    const eightChar=lunar.getEightChar();
+
+    const yearPillar=eightChar.getYear();
+    const monthPillar=eightChar.getMonth();
+    const dayPillar=eightChar.getDay();
+    const hourPillar=eightChar.getHour();
+
+    const yGan=yearPillar[0],yZhi=yearPillar[1];
+    const mGan=monthPillar[0],mZhi=monthPillar[1];
+    const dGan=dayPillar[0],dZhi=dayPillar[1];
+    const hGan=hourPillar[0],hZhi=hourPillar[1];
+
+    const zodiac=lunar.getYearZodiac();
+    const lunarMonth=lunar.getMonth();
+    const lunarDay=lunar.getDay();
+    const lunarDateStr='农历'+lunar.getYearInChinese()+'年'+lunar.getMonthInChinese()+'月'+lunar.getDayInChinese();
+
+    // Five elements count
+    const elCount={'木':0,'火':0,'土':0,'金':0,'水':0};
+    [yGan,mGan,dGan,hGan].forEach(s=>{elCount[getElement(s)]++});
+    [yZhi,mZhi,dZhi,hZhi].forEach(b=>{elCount[getBranchElement(b)]++});
+
+    // Day master
+    const dayMaster=dGan;
+    const dmElement=getElement(dayMaster);
+    const dmPolarity=getPolarity(dayMaster);
+
+    // Ten Gods
+    const tgYear=getTenGod(dayMaster,yGan);
+    const tgMonth=getTenGod(dayMaster,mGan);
+    const tgDay='日主';
+    const tgHour=getTenGod(dayMaster,hGan);
+
+    // Day master strength (simplified)
+    let sameCount=0,diffCount=0;
+    [yGan,mGan,dGan,hGan].forEach(s=>{if(getElement(s)===dmElement)sameCount++;else diffCount++});
+    [yZhi,mZhi,dZhi,hZhi].forEach(b=>{if(getBranchElement(b)===dmElement)sameCount++});
+    // Generate element supports me
+    let supportCount=0;
+    ELEMENTS.forEach(e=>{if(GENERATE[e]===dmElement)supportCount+=elCount[e]});
+    const totalSupport=sameCount+supportCount*0.5;
+    const strengthLabel=totalSupport>=4?'身强':totalSupport>=2.5?'中和':'身弱';
+    const strengthClass=totalSupport>=4?'strong':totalSupport>=2.5?'balanced':'weak';
+
+    // Favorable elements (simplified: if strong, favor elements that drain/control; if weak, favor elements that support)
+    let favorable=[],unfavorable=[];
+    if(totalSupport>=3.5){
+      // Strong - favor control and drain
+      ELEMENTS.forEach(e=>{
+        if(CONTROL[dmElement]===e||GENERATE[dmElement]===e)favorable.push(e);
+        if(e===dmElement||GENERATE[e]===dmElement)unfavorable.push(e);
+      });
+    }else{
+      // Weak - favor support
+      ELEMENTS.forEach(e=>{
+        if(e===dmElement||GENERATE[e]===dmElement)favorable.push(e);
+        if(CONTROL[dmElement]===e||GENERATE[dmElement]===e)unfavorable.push(e);
+      });
+    }
+
+    // Build result
+    const result=document.getElementById('bazi-result');
+    result.classList.remove('hidden');
+    result.innerHTML=`
+      <div class="glass-panel">
+        <h3>排盘结果</h3>
+        <p class="text-muted">${solar.toFullString()} &nbsp;|&nbsp; ${lunarDateStr} &nbsp;|&nbsp; 生肖: ${zodiac}</p>
+        <div class="zodiac-badge">🐾 ${zodiac} · ${dmElement}${dmPolarity === '阳' ? '阳' : '阴'}</div>
+        
+        <div class="pillars-row">
+          ${makePillarBox('年柱',yGan,yZhi,tgYear)}
+          ${makePillarBox('月柱',mGan,mZhi,tgMonth)}
+          ${makePillarBox('日柱',dGan,dZhi,tgDay)}
+          ${makePillarBox('时柱',hGan,hZhi,tgHour)}
+        </div>
+        
+        <p class="section-title-sm">十神</p>
+        <table class="ten-gods-table">
+          <tr><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr>
+          <tr><td>${tgYear}</td><td>${tgMonth}</td><td>日主</td><td>${tgHour}</td></tr>
+        </table>
+      </div>
+
+      <div class="glass-panel">
+        <h3>五行分析</h3>
+        <div class="elements-chart">
+          ${ELEMENTS.map(e=>{
+            const pct=Math.min(elCount[e]/8*100,100);
+            return `<div class="element-row el-${e}">
+              <div class="element-label">${e}</div>
+              <div class="element-bar-wrap"><div class="element-bar" style="width:0%"></div></div>
+              <div class="element-count">${elCount[e]}</div>
+            </div>`;
+          }).join('')}
+        </div>
+        <div style="margin-top:16px">
+          <span class="section-title-sm">日主强弱: </span>
+          <span class="strength-tag ${strengthClass}">${strengthLabel}</span>
+        </div>
+        <div class="god-pan">
+          <div class="god-item"><div class="god-label">喜用神</div><div class="god-value">${favorable.join(' ')||'—'}</div></div>
+          <div class="god-item"><div class="god-label">忌神</div><div class="god-value">${unfavorable.join(' ')||'—'}</div></div>
+        </div>
+      </div>
+    `;
+    // Animate bars
+    setTimeout(()=>{
+      result.querySelectorAll('.element-bar').forEach((bar,i)=>{
+        const e=ELEMENTS[i];
+        const pct=Math.min(elCount[e]/8*100,100);
+        bar.style.width=pct+'%';
+      });
+    },100);
+  }catch(err){
+    alert('排盘出错: '+err.message+'\n请检查输入的日期是否正确');
+    console.error(err);
+  }
+}
+
+function makePillarBox(label,gan,zhi,tg){
+  const ge=getElement(gan),ze=getBranchElement(zhi);
+  return `<div class="pillar-box">
+    <div class="pillar-label">${label}</div>
+    <div class="pillar-gan">${gan}</div>
+    <div class="pillar-zhi">${zhi}</div>
+    <div class="pillar-tg">${ge} · ${ze} | ${tg}</div>
+  </div>`;
+}
+
+// ===================== CALENDAR MODULE =====================
+let calYear,calMonth;
+const ZHI_LIST=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const TWELVE_OFFICERS=['建','除','满','平','定','执','破','危','成','收','开','闭'];
+const OFFICER_YI={
+  '建':['出行','上任'],'除':['治病','沐浴'],'满':['祭祀','祈福'],
+  '平':['修造','装修'],'定':['签约','纳畜'],'执':['捕捉','畋猎'],
+  '破':['拆卸','破屋'],'危':['安床','祭祀'],'成':['开业','嫁娶'],
+  '收':['收账','纳财'],'开':['开业','出行'],'闭':['安葬','塞穴']
+};
+const OFFICER_JI={
+  '建':['动土','开仓'],'除':['远行','嫁娶'],'满':['裁衣','远行'],
+  '平':['栽种','造屋'],'定':['诉讼','打官司'],'执':['开市','搬家'],
+  '破':['嫁娶','开业'],'危':['登高','出行'],'成':['诉讼','安葬'],
+  '收':['开市','置产'],'开':['安葬','修造'],'闭':['开市','出行']
+};
+
+// Additional yi ji based on heavenly stems
+const STEM_YI={
+  '甲':['开仓','求财'],'乙':['裁衣','嫁娶'],'丙':['修造','出行'],
+  '丁':['祭祀','求医'],'戊':['祭祀','祈福'],'己':['嫁娶','纳采'],
+  '庚':['出行','求医'],'辛':['嫁娶','修造'],'壬':['出行','祭祀'],
+  '癸':['嫁娶','修造']
+};
+const STEM_JI={
+  '甲':['开市','安葬'],'丙':['安葬','破土'],'戊':['动土','嫁娶'],
+  '庚':['开市','嫁娶'],'壬':['安葬','开仓']
+};
+
+// 28 Lunar Mansions (二十八宿)
+const LUNAR_MANSIONS=['角','亢','氐','房','心','尾','箕','斗','牛','女','虚','危','室','壁','奎','娄','胃','昴','毕','觜','参','井','鬼','柳','星','张','翼','轸'];
+
+function initCalendar(){
+  const now=new Date();
+  calYear=now.getFullYear();calMonth=now.getMonth()+1;
+  renderCalendar();
+}
+
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth>12){calMonth=1;calYear++}
+  if(calMonth<1){calMonth=12;calYear--}
+  renderCalendar();
+}
+
+function renderCalendar(){
+  document.getElementById('cal-title').textContent=calYear+'年'+calMonth+'月';
+  const grid=document.getElementById('cal-grid');
+  const headers=['日','一','二','三','四','五','六'];
+  let html=headers.map(h=>`<div class="cal-day-header">${h}</div>`).join('');
+
+  const firstDay=new Date(calYear,calMonth-1,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth,0).getDate();
+  const today=new Date();
+
+  // Empty cells
+  for(let i=0;i<firstDay;i++)html+='<div class="cal-day empty"></div>';
+
+  for(let d=1;d<=daysInMonth;d++){
+    let lunarInfo='',yijiSummary='',isAuspicious=false,isInauspicious=false;
+    let dayGanZhi='';
+    try{
+      const solar=Solar.fromYmd(calYear,calMonth,d);
+      const lunar=solar.getLunar();
+      lunarInfo=lunar.getDayInChinese();
+      dayGanZhi=lunar.getDayInGanZhi();
+      
+      // Twelve officers
+      const monthZhi=lunar.getMonthZhi();
+      const monthZhiIdx=ZHI_LIST.indexOf(monthZhi);
+      const dayZhi=dayGanZhi[1];
+      const dayZhiIdx=ZHI_LIST.indexOf(dayZhi);
+      let officerIdx=(dayZhiIdx-monthZhiIdx+12)%12;
+      // Adjust: 建 is when day zhi = month zhi
+      officerIdx=(dayZhiIdx-monthZhiIdx+12)%12;
+      const officer=TWELVE_OFFICERS[officerIdx];
+      const yi=OFFICER_YI[officer]||[];
+      const ji=OFFICER_JI[officer]||[];
+      yijiSummary='宜'+yi[0]+' 忌'+ji[0];
+      isAuspicious=['成','开','建','定'].includes(officer);
+      isInauspicious=['破','闭','危'].includes(officer);
+    }catch(e){}
+
+    const isToday=(d===today.getDate()&&calMonth===today.getMonth()+1&&calYear===today.getFullYear());
+    const cls=['cal-day'];
+    if(isToday)cls.push('today');
+    if(isAuspicious)cls.push('auspicious');
+    if(isInauspicious)cls.push('inauspicious');
+
+    html+=`<div class="${cls.join(' ')}" data-day="${d}" onclick="showDayDetail(${d})">
+      <div class="solar">${d}</div>
+      <div class="lunar">${lunarInfo}</div>
+      <div class="yi-ji-summary">${yijiSummary}</div>
+    </div>`;
+  }
+  grid.innerHTML=html;
+  document.getElementById('day-detail-container').innerHTML='';
+  calSearch();
+}
+
+function calSearch(){
+  const keyword=document.getElementById('cal-search').value.trim();
+  document.querySelectorAll('#cal-grid .cal-day:not(.empty)').forEach(cell=>{
+    cell.classList.remove('highlight');
+    if(keyword){
+      const summary=cell.querySelector('.yi-ji-summary');
+      if(summary&&summary.textContent.includes(keyword)){
+        cell.classList.add('highlight');
+      }
+    }
+  });
+}
+
+function showDayDetail(d){
+  // Highlight selected
+  document.querySelectorAll('#cal-grid .cal-day').forEach(c=>c.classList.remove('selected'));
+  const sel=document.querySelector(`#cal-grid .cal-day[data-day="${d}"]`);
+  if(sel)sel.classList.add('selected');
+
+  try{
+    const solar=Solar.fromYmd(calYear,calMonth,d);
+    const lunar=solar.getLunar();
+    const dayGZ=lunar.getDayInGanZhi();
+    const monthZhi=lunar.getMonthZhi();
+    const monthZhiIdx=ZHI_LIST.indexOf(monthZhi);
+    const dayZhi=dayGZ[1];
+    const dayZhiIdx=ZHI_LIST.indexOf(dayZhi);
+    let officerIdx=(dayZhiIdx-monthZhiIdx+12)%12;
+    const officer=TWELVE_OFFICERS[officerIdx];
+    const yi=OFFICER_YI[officer]||[];
+    const ji=OFFICER_JI[officer]||[];
+
+    // Extra yi ji from stem
+    const dayStem=dayGZ[0];
+    const extraYi=STEM_YI[dayStem]||[];
+    const extraJi=STEM_JI[dayStem]||[];
+
+    // 28 mansions
+    const mansionIdx=(dayZhiIdx*2+monthZhiIdx)%28;
+    const mansion=LUNAR_MANSIONS[mansionIdx];
+
+    // Clash (冲)
+    const clashIdx=(dayZhiIdx+6)%12;
+    const clash=ZHI_LIST[clashIdx];
+
+    // Auspicious hours (吉时) - simplified: based on day branch
+    const goodHours=[];
+    for(let hh=0;hh<12;hh++){
+      const hZhi=ZHI_LIST[(hh*2)%12]; // approximate mapping
+      const hZhiIdx=(hh*2)%12;
+      // Simple: if hZhi and dayZhi form a harmonious relation (三合 or 六合)
+      const diff=(hZhiIdx-dayZhiIdx+12)%12;
+      if([0,3,4,6,8,9].includes(diff)){
+        const hStr=(hh*2<10?'0':'')+hh*2+':00-'+((hh*2+2)<10?'0':'')+(hh*2+2)+':00';
+        goodHours.push(hStr);
+      }
+    }
+
+    const allYi=[...new Set([...yi,...extraYi])];
+    const allJi=[...new Set([...ji,...extraJi])];
+
+    const container=document.getElementById('day-detail-container');
+    container.innerHTML=`
+      <div class="glass-panel day-detail">
+        <h3>📋 ${calYear}年${calMonth}月${d}日 详情</h3>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="label">干支日</div><div class="value">${dayGZ}</div></div>
+          <div class="detail-item"><div class="label">农历</div><div class="value">${lunar.getYearInChinese()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}</div></div>
+          <div class="detail-item"><div class="label">十二建星</div><div class="value">${officer}</div></div>
+          <div class="detail-item"><div class="label">二十八宿</div><div class="value">${mansion}</div></div>
+          <div class="detail-item"><div class="label">冲煞</div><div class="value">冲${clash}煞${clash}</div></div>
+          <div class="detail-item"><div class="label">生肖</div><div class="value">${lunar.getYearZodiac()}</div></div>
+        </div>
+        <div style="margin-top:16px">
+          <div class="section-title-sm">宜</div>
+          <div class="yi-list">${allYi.map(y=>`<span class="yi-tag yi">${y}</span>`).join('')}</div>
+        </div>
+        <div style="margin-top:12px">
+          <div class="section-title-sm">忌</div>
+          <div class="yi-list">${allJi.map(j=>`<span class="yi-tag ji">${j}</span>`).join('')}</div>
+        </div>
+        <div style="margin-top:12px">
+          <div class="section-title-sm">吉时推荐</div>
+          <div class="yi-list">${goodHours.length?goodHours.map(h=>`<span class="yi-tag yi">${h}</span>`).join(''):'<span class="text-muted">暂无特别推荐</span>'}</div>
+        </div>
+      </div>
+    `;
+  }catch(err){
+    document.getElementById('day-detail-container').innerHTML='<p class="text-muted">日期数据加载失败</p>';
+  }
+}
+
+// ===================== TAROT MODULE =====================
+const MAJOR_ARCANA=[
+  {id:0,name:'愚者',en:'The Fool',num:'',symbol:'🌀',upright:'新的开始、天真、自由、冒险精神、无限可能',reversed:'鲁莽、不计后果、停滞不前、恐惧改变'},
+  {id:1,name:'魔术师',en:'The Magician',num:'I',symbol:'🪄',upright:'创造力、意志力、技能、自信、新机会',reversed:'欺骗、缺乏自信、技能未发挥、操控欲'},
+  {id:2,name:'女祭司',en:'The High Priestess',num:'II',symbol:'🌙',upright:'直觉、潜意识、内在智慧、神秘、耐心等待',reversed:'忽略直觉、表面化、秘密即将揭露、缺乏内在声音'},
+  {id:3,name:'皇后',en:'The Empress',num:'III',symbol:'👑',upright:'丰饶、母性、自然、感官享受、创造力',reversed:'依赖他人、创造力受阻、过度溺爱、缺乏安全感'},
+  {id:4,name:'皇帝',en:'The Emperor',num:'IV',symbol:'🏛️',upright:'权威、结构、稳定、领导力、保护',reversed:'专制、僵化、控制欲、缺乏纪律'},
+  {id:5,name:'教皇',en:'The Hierophant',num:'V',symbol:'📿',upright:'传统、精神指导、信仰、教育、仪式',reversed:'打破常规、非传统、挑战权威、个人信仰'},
+  {id:6,name:'恋人',en:'The Lovers',num:'VI',symbol:'💕',upright:'爱情、和谐、选择、价值观一致、吸引力',reversed:'不和谐、价值冲突、错误选择、内在矛盾'},
+  {id:7,name:'战车',en:'The Chariot',num:'VII',symbol:'🏆',upright:'胜利、意志力、决心、行动力、克服困难',reversed:'失去控制、方向不明、挫败、攻击性'},
+  {id:8,name:'力量',en:'Strength',num:'VIII',symbol:'🦁',upright:'内在力量、勇气、耐心、慈悲、柔克刚',reversed:'自我怀疑、软弱、缺乏勇气、滥用力量'},
+  {id:9,name:'隐士',en:'The Hermit',num:'IX',symbol:'🏮',upright:'内省、独处、智慧、灵性引导、谨慎',reversed:'孤立、固执、逃避现实、拒绝帮助'},
+  {id:10,name:'命运之轮',en:'Wheel of Fortune',num:'X',symbol:'☸️',upright:'命运转折、好运、因果循环、机遇',reversed:'坏运气、抗拒改变、外力干扰、失控'},
+  {id:11,name:'正义',en:'Justice',num:'XI',symbol:'⚖️',upright:'公正、因果报应、真理、法律、平衡',reversed:'不公正、逃避责任、偏见、不诚实'},
+  {id:12,name:'倒吊人',en:'The Hanged Man',num:'XII',symbol:'🔮',upright:'牺牲、放手、新视角、等待、灵性觉醒',reversed:'拖延、拒绝牺牲、自私、困顿'},
+  {id:13,name:'死神',en:'Death',num:'XIII',symbol:'🦋',upright:'结束与新生、转变、放下过去、深刻变化',reversed:'抗拒改变、恐惧结束、停滞、无法释怀'},
+  {id:14,name:'节制',en:'Temperance',num:'XIV',symbol:'🕊️',upright:'平衡、适度、耐心、调和、内在平静',reversed:'失衡、过度、缺乏耐心、内心冲突'},
+  {id:15,name:'恶魔',en:'The Devil',num:'XV',symbol:'⛓️',upright:'束缚、欲望、执念、物质主义、阴暗面',reversed:'解脱、打破束缚、重获自由、面对阴暗面'},
+  {id:16,name:'塔',en:'The Tower',num:'XVI',symbol:'⚡',upright:'突变、崩塌、启示、打破幻象、觉醒',reversed:'避免灾难、害怕改变、延迟不可避免的事'},
+  {id:17,name:'星星',en:'The Star',num:'XVII',symbol:'⭐',upright:'希望、灵感、宁静、治愈、信仰',reversed:'失去希望、不自信、断连、创意枯竭'},
+  {id:18,name:'月亮',en:'The Moon',num:'XVIII',symbol:'🌕',upright:'幻觉、恐惧、潜意识、直觉、不确定性',reversed:'释放恐惧、走出迷雾、真相浮现、克服焦虑'},
+  {id:19,name:'太阳',en:'The Sun',num:'XIX',symbol:'☀️',upright:'快乐、成功、活力、乐观、真理',reversed:'暂时的挫折、过度乐观、延迟的成功、失去方向'},
+  {id:20,name:'审判',en:'Judgement',num:'XX',symbol:'📯',upright:'觉醒、重生、反思、召唤、决断',reversed:'自我怀疑、拒绝反思、错过机会、无法原谅'},
+  {id:21,name:'世界',en:'The World',num:'XXI',symbol:'🌍',upright:'完成、圆满、成就、整合、新旅程的开始',reversed:'未完成、缺乏闭合、走捷径、延迟完成'}
+];
+
+const SUITS=[
+  {id:'wands',name:'权杖',en:'Wands',symbol:'🪄',element:'火'},
+  {id:'cups',name:'圣杯',en:'Cups',symbol:'🏆',element:'水'},
+  {id:'swords',name:'宝剑',en:'Swords',symbol:'⚔️',element:'风'},
+  {id:'pentacles',name:'星币',en:'Pentacles',symbol:'🪙',element:'土'}
+];
+
+const RANKS=['A','2','3','4','5','6','7','8','9','10','侍从','骑士','王后','国王'];
+const RANKS_EN=['Ace','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Page','Knight','Queen','King'];
+
+const MINOR_UPRIGHT={
+  'wands':['创造力、灵感、新开始','激情、决心、冲突','进展、扩张、信心','稳定、安逸、归属','竞争、冲突、变化','胜利、好消息、进步','勇气、坚持、防御','快速行动、效率、竞争','毅力、责任、接近目标','负担、过度付出、压力','热情、冒险、探索','行动、冲动、追求','魅力、自信、领导','激励、创业、大胆'],
+  'cups':['新感情、直觉、创意','和谐、合作、新关系','友情、庆祝、社区','冥想、内省、选择','失去、遗憾、不满足','怀旧、回忆、童年','幻想、选择、想象','放弃、离开、新方向','满足、幸福、情感丰沛','完美幸福、家庭和谐','情感消息、直觉、新机会','浪漫追求、理想主义','情感智慧、慈悲、倾听','情感成熟、直觉、关怀'],
+  'swords':['新想法、突破、决断','平衡、艰难选择、耐心','悲伤、分离、心碎','休息、恢复、内省','竞争、冲突、不和谐','妥协、过渡、沟通','欺骗、背叛、缺乏信任','限制、束缚、自我设限','焦虑、担忧、困境','痛苦结局、背叛、失败','好奇、机智、新想法','直接行动、勇敢、急躁','清晰、独立、直率','权威、理性、清晰思考'],
+  'pentacles':['新机会、财富开始','平衡、时间管理','技能发展、合作','安全、保守、满足','困难、贫穷、焦虑','慷慨、分享、收获','耐心、投资、长期规划','技能精通、勤劳','富足、独立、成功','财富、传承、安全','学习机会、新技能','行动、冒险、追求','实用性、可靠、养育','富裕、成功、领导']
+};
+const MINOR_REVERSED={
+  'wands':['延迟、缺乏方向','挫折、分散精力','延误、缺乏信心','不安、想要改变','逃避冲突、放弃','挫折、坏消息','防御过度、固执','匆忙、缺乏计划','延迟、缺乏动力','无法承受的压力','缺乏热情、延迟','拖延、优柔寡断','嫉妒、控制欲','鲁莽、急躁'],
+  'cups':['情感封闭、空虚','不和谐、信任问题','流言、虚假朋友','逃避、沉迷幻想','新机会、放手过去','走出过去、面对现实','清醒、做出选择','回到过去、无法放手','失望、目标未达','幸福受阻、家庭问题','情感压抑、不安全感','不切实际、嫉妒','情绪化、缺乏界限','情绪操控、不成熟'],
+  'swords':['混乱、误解','优柔寡断、过度思考','走出悲伤、恢复','结束休息、行动','避免冲突、和平','困惑、误解','揭露真相、自我反省','释放束缚、新视角','克服焦虑、理性','无法释怀、过去困住','匆忙行动、鲁莽','放弃、延迟','混乱、利用聪明','权力滥用、操控'],
+  'pentacles':['错失机会、缺乏规划','过度工作、失衡','缺乏合作、技能不足','不安全感、过度节俭','走出困难、改善','贪婪、自私','缺乏耐心、急躁','过度工作、完美主义','过度物质、孤立','过度担忧金钱','缺乏学习动力','缺乏方向、懒惰','过度溺爱、物质主义','贪财、守财']
+};
+
+const SPREAD_POSITIONS={
+  1:['当前指引'],
+  3:['过去','现在','未来'],
+  10:['当前状况','挑战','根源','近期过去','近期未来','自我认知','外部影响','希望与恐惧','最终结果','总结']
+};
+
+const SPREAD_NAMES={1:'单牌速占',3:'三牌阵',10:'凯尔特十字'};
+
+let tarotDeck=[],tarotRevealed=[],tarotSpread=0,tarotCards=[];
+
+function buildTarotDeck(){
+  const deck=[];
+  MAJOR_ARCANA.forEach(c=>{
+    deck.push({type:'major',id:c.id,...c,rank:c.num,suitName:''});
+  });
+  SUITS.forEach(suit=>{
+    RANKS.forEach((rank,i)=>{
+      deck.push({
+        type:'minor',id:`${suit.id}-${i}`,
+        name:rank+suit.name,en:`${RANKS_EN[i]} of ${suit.en}`,
+        num:RANKS_EN[i],symbol:suit.symbol,
+        suitName:suit.name,suitId:suit.id,rankIdx:i,
+        upright:MINOR_UPRIGHT[suit.id][i],
+        reversed:MINOR_REVERSED[suit.id][i]
+      });
+    });
+  });
+  return deck;
+}
+
+function shuffleArray(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function startTarot(count){
+  tarotSpread=count;
+  tarotDeck=shuffleArray(buildTarotDeck());
+  tarotCards=tarotDeck.slice(0,count).map(c=>({...c,isReversed:Math.random()<0.5}));
+  tarotRevealed=new Array(count).fill(false);
+
+  document.getElementById('spread-select').classList.add('hidden');
+  const play=document.getElementById('tarot-play');
+  play.classList.remove('hidden');
+
+  const positionNames=SPREAD_POSITIONS[count]||[];
+  let cardsHtml=tarotCards.map((c,i)=>`
+    <div class="tarot-card-wrap" onclick="flipTarotCard(${i})" id="tc-${i}">
+      <div class="tarot-card-inner">
+        <div class="tarot-card-back">
+          <div class="back-design">
+            <div class="back-stars">✦ ✧ ✦</div>
+            <div class="back-line"></div>
+            <div class="back-moon">☽</div>
+            <div class="back-line"></div>
+            <div class="back-stars">✦ ✧ ✦</div>
+          </div>
+        </div>
+        <div class="tarot-card-face ${c.isReversed?'reversed-card':''}">
+          <div class="card-numeral">${c.num||'0'}</div>
+          <div class="card-symbol">${c.symbol}</div>
+          <div class="card-name-cn">${c.name}${c.isReversed?' (逆位)':''}</div>
+          <div class="card-name-en">${c.en}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  play.innerHTML=`
+    <p class="text-muted mb-16" style="text-align:center;font-size:15px;font-family:'ZCOOL XiaoWei',serif">
+      ${SPREAD_NAMES[count]} — 点击每张牌翻看解读
+    </p>
+    <div class="tarot-table">${cardsHtml}</div>
+    <div class="reading-panel" id="tarot-reading"></div>
+    <div style="text-align:center">
+      <button class="reset-btn" onclick="resetTarot()">🔮 重新占卜</button>
+    </div>
+  `;
+}
+
+function flipTarotCard(idx){
+  if(tarotRevealed[idx])return;
+  tarotRevealed[idx]=true;
+  const wrap=document.getElementById('tc-'+idx);
+  wrap.querySelector('.tarot-card-inner').classList.add('flipped');
+  updateTarotReading();
+}
+
+function updateTarotReading(){
+  const positionNames=SPREAD_POSITIONS[tarotSpread]||[];
+  const panel=document.getElementById('tarot-reading');
+  let html='';
+  let allRevealed=tarotRevealed.every(r=>r);
+
+  tarotCards.forEach((c,i)=>{
+    if(!tarotRevealed[i])return;
+    const orientation=c.isReversed?'逆位':'正位';
+    const meaning=c.isReversed?c.reversed:c.upright;
+    html+=`
+      <div class="card-reading">
+        <div class="card-title">${c.name} (${c.en})</div>
+        <div class="card-position">位置: ${positionNames[i]||('第'+(i+1)+'张')}</div>
+        <div class="card-orientation ${c.isReversed?'reversed':'upright'}">${orientation}</div>
+        <div class="card-meaning">${meaning}</div>
+      </div>
+    `;
+  });
+
+  if(allRevealed){
+    html+=`
+      <div class="overall-reading">
+        <h3>🔮 综合解读</h3>
+        <p style="color:rgba(240,214,138,0.8);line-height:2">
+          ${generateOverallReading()}
+        </p>
+      </div>
+    `;
+  }
+
+  panel.innerHTML=html;
+}
+
+function generateOverallReading(){
+  const cards=tarotCards.map((c,i)=>({
+    name:c.name,en:c.en,
+    reversed:c.isReversed,
+    position:(SPREAD_POSITIONS[tarotSpread]||[])[i]||('第'+(i+1)+'张'),
+    meaning:c.isReversed?c.reversed:c.upright
+  }));
+
+  const reversedCount=cards.filter(c=>c.reversed).length;
+  const uprightCount=cards.length-reversedCount;
+
+  let summary='本次'+SPREAD_NAMES[tarotSpread]+'揭示了';
+  if(tarotSpread===1){
+    const c=cards[0];
+    summary+=`你当前的能量指引。${c.name}（${c.reversed?'逆位':'正位'}）提示你：${c.meaning}。`;
+    summary+=c.reversed?'当前可能面临一些内在阻力，建议调整心态，顺其自然。':'能量状态良好，把握当下的机遇，大胆前行。';
+  }else if(tarotSpread===3){
+    summary+=`时间之流的三个维度。`;
+    summary+=`过去的「${cards[0].name}」暗示了你的历史根基；`;
+    summary+=`现在的「${cards[1].name}」是你当前的核心课题；`;
+    summary+=`未来的「${cards[2].name}」指引着你的方向。`;
+    summary+=reversedCount>=2?'整体牌面逆位较多，建议内省和调整，暂时不宜冒进。':'整体牌面正位居多，能量畅通，是积极行动的好时机。';
+  }else{
+    summary+=`凯尔特十字阵的深层信息。`;
+    summary+=`核心课题「${cards[0].name}」与挑战「${cards[1].name}」交织，`;
+    summary+=`根源在于「${cards[2].name}」的影响。`;
+    summary+=`最终指向「${cards[8].name}」，总结启示为「${cards[9].name}」。`;
+    summary+=reversedCount>=5?'逆位牌较多，当前可能处于转型期，需要耐心和内省。':'正位牌占优，能量流动顺畅，适合积极面对和推进事务。';
+  }
+  summary+='记住，塔罗牌提供的是指引而非定论，你始终拥有自由意志去创造自己的命运。';
+  return summary;
+}
+
+function resetTarot(){
+  document.getElementById('spread-select').classList.remove('hidden');
+  document.getElementById('tarot-play').classList.add('hidden');
+  document.getElementById('tarot-play').innerHTML='';
+  tarotDeck=[];tarotCards=[];tarotRevealed=[];tarotSpread=0;
+}
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded',()=>{
+  // Pre-fill bazi with example
+  document.getElementById('bz-year').value=1990;
+  document.getElementById('bz-month').value=6;
+  document.getElementById('bz-day').value=15;
+  document.getElementById('bz-hour').value=8;
+  document.getElementById('bz-minute').value=30;
+});
+</script>
+</body>
+</html>
