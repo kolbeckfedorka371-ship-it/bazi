@@ -6,12 +6,6 @@
 <title>命理玄学 - 八字·黄历·塔罗</title>
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.7.7/lunar.min.js"></script>
-<script>
-// Fallback CDN if primary fails
-if(typeof Solar==='undefined'){
-  document.write('<script src="https://unpkg.com/lunar-javascript@1.7.7/lunar.min.js"><\/script>');
-}
-</script>
 <style>
 /* ===================== RESET & BASE ===================== */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -232,219 +226,102 @@ body{
 .yi-tag.ji{background:rgba(244,67,54,0.1);color:#ef9a9a;border:1px solid rgba(244,67,54,0.2)}
 
 /* ===================== TAROT ===================== */
-/* ===== TAROT SECTION - Mystical Theme ===== */
-#view-tarot{
-  background:radial-gradient(ellipse at 50% 30%,rgba(40,10,50,0.4) 0%,transparent 70%);
-}
-#view-tarot .glass-panel{
-  border-color:rgba(160,100,200,0.2);
-}
-#view-tarot h3{
-  background:linear-gradient(180deg,#e8d0f0 20%,#a060c0 80%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  text-shadow:none;font-size:2rem;letter-spacing:0.15em;
-}
-#view-tarot .text-muted{color:rgba(200,180,220,0.6)}
-
-/* Spread selection */
-.spread-options{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin:30px 0}
+.spread-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin:20px 0}
 .spread-option{
-  background:linear-gradient(145deg,rgba(30,15,40,0.8),rgba(15,5,25,0.9));
-  border:1px solid rgba(160,100,200,0.25);border-radius:20px;
-  padding:40px 24px;text-align:center;cursor:pointer;transition:all 0.5s;
-  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(26,8,12,0.7),rgba(10,3,5,0.85));
+  border:1px solid rgba(212,168,67,0.2);border-radius:16px;
+  padding:32px 20px;text-align:center;cursor:pointer;transition:all 0.4s;
 }
-.spread-option::before{
-  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
-  background:radial-gradient(circle,rgba(160,100,200,0.08) 0%,transparent 60%);
-  opacity:0;transition:opacity 0.5s;
-}
-.spread-option:hover::before{opacity:1}
 .spread-option:hover{
-  transform:translateY(-8px);border-color:rgba(160,100,200,0.5);
-  box-shadow:0 16px 50px rgba(100,50,150,0.2),0 0 30px rgba(160,100,200,0.1);
+  transform:translateY(-6px);border-color:rgba(212,168,67,0.5);
+  box-shadow:0 12px 40px rgba(212,168,67,0.1);
 }
-.spread-option .icon{font-size:48px;display:block;margin-bottom:16px;filter:drop-shadow(0 0 10px rgba(160,100,200,0.4))}
-.spread-option h4{font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#c8a0e0;margin-bottom:10px;letter-spacing:0.08em}
-.spread-option p{font-size:13px;color:rgba(200,180,220,0.5);line-height:1.6}
+.spread-option .icon{font-size:40px;display:block;margin-bottom:12px}
+.spread-option h4{font-family:'Ma Shan Zheng',cursive;font-size:22px;color:#d4a843;margin-bottom:8px}
+.spread-option p{font-size:13px;color:rgba(240,214,138,0.5)}
 
 /* Tarot table / cards area */
 .tarot-table{
-  display:flex;flex-wrap:wrap;gap:20px;justify-content:center;
-  padding:30px 0;min-height:250px;
-  perspective:1200px;
+  display:flex;flex-wrap:wrap;gap:16px;justify-content:center;
+  padding:20px 0;min-height:200px;
 }
 .tarot-card-wrap{
-  perspective:1000px;width:130px;height:200px;cursor:pointer;
-  transition:all 0.4s;
+  perspective:800px;width:120px;height:180px;cursor:pointer;
 }
 .tarot-card-inner{
   position:relative;width:100%;height:100%;
-  transition:transform 0.9s cubic-bezier(.25,.8,.25,1);
+  transition:transform 0.8s cubic-bezier(.25,.8,.25,1);
   transform-style:preserve-3d;
 }
 .tarot-card-inner.flipped{transform:rotateY(180deg)}
 .tarot-card-face,.tarot-card-back{
   position:absolute;width:100%;height:100%;
-  backface-visibility:hidden;border-radius:12px;
+  backface-visibility:hidden;border-radius:10px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
-
-/* Card Back - Ornate Mystical Design */
 .tarot-card-back{
-  background:linear-gradient(145deg,#1a0a20,#0d0515);
-  border:2px solid rgba(160,100,200,0.4);
-  box-shadow:0 4px 20px rgba(0,0,0,0.5),inset 0 0 30px rgba(160,100,200,0.05);
-  overflow:hidden;
+  background:linear-gradient(145deg,#1a080c,#2a1018);
+  border:2px solid #d4a843;
+  background-image:
+    repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(212,168,67,0.05) 8px,rgba(212,168,67,0.05) 9px),
+    repeating-linear-gradient(-45deg,transparent,transparent 8px,rgba(212,168,67,0.05) 8px,rgba(212,168,67,0.05) 9px);
 }
-.tarot-card-back::before{
-  content:'';position:absolute;top:8px;left:8px;right:8px;bottom:8px;
-  border:1px solid rgba(160,100,200,0.3);border-radius:8px;
-}
-.tarot-card-back::after{
-  content:'';position:absolute;top:15px;left:15px;right:15px;bottom:15px;
-  border:1px solid rgba(160,100,200,0.15);border-radius:6px;
-  background:
-    repeating-conic-gradient(rgba(160,100,200,0.06) 0deg 10deg,transparent 10deg 20deg) center/80% 80% no-repeat;
-}
-.tarot-card-back .back-design{
-  position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
-}
-.tarot-card-back .back-moon{
-  font-size:28px;color:#c8a0e0;text-shadow:0 0 20px rgba(200,160,224,0.6);
-  animation:mysticPulse 3s ease-in-out infinite;
-}
-.tarot-card-back .back-stars{
-  font-size:10px;color:rgba(200,160,224,0.5);letter-spacing:4px;
-}
-.tarot-card-back .back-line{
-  width:60px;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(200,160,224,0.4),transparent);
-}
-@keyframes mysticPulse{
-  0%,100%{text-shadow:0 0 20px rgba(200,160,224,0.4);transform:scale(1)}
-  50%{text-shadow:0 0 30px rgba(200,160,224,0.7);transform:scale(1.05)}
-}
-
-/* Card Front - Ornate Design */
+.tarot-card-back .back-symbol{font-size:40px;color:#d4a843;text-shadow:0 0 20px rgba(212,168,67,0.4)}
 .tarot-card-face{
-  background:linear-gradient(145deg,#faf5f0,#f0e8d8);
-  border:2px solid #b8960a;
+  background:linear-gradient(145deg,#faf5e8,#f5eed8);
+  border:2px solid #d4a843;
   transform:rotateY(180deg);
   color:#1a080c;
-  padding:10px;
-  box-shadow:0 4px 20px rgba(0,0,0,0.4);
-  position:relative;overflow:hidden;
-}
-.tarot-card-face::before{
-  content:'';position:absolute;top:6px;left:6px;right:6px;bottom:6px;
-  border:1px solid rgba(180,150,10,0.3);border-radius:6px;pointer-events:none;
+  padding:8px;
 }
 .tarot-card-face.reversed-card{transform:rotateY(180deg) rotate(180deg)}
-.tarot-card-face .card-numeral{
-  font-size:11px;color:#8b6914;position:absolute;top:8px;left:10px;
-  font-family:'Noto Serif SC',serif;font-weight:700;
-}
-.tarot-card-face .card-numeral-br{
-  font-size:11px;color:#8b6914;position:absolute;bottom:8px;right:10px;
-  font-family:'Noto Serif SC',serif;font-weight:700;transform:rotate(180deg);
-}
-.tarot-card-face .card-suit{font-size:30px;margin:6px 0}
-.tarot-card-face .card-name-cn{
-  font-size:13px;font-weight:700;color:#2a1018;margin-top:2px;
-  font-family:'Ma Shan Zheng',cursive;letter-spacing:0.05em;
-}
-.tarot-card-face .card-name-en{font-size:8px;color:#8b6914;margin-top:1px}
-.tarot-card-face .card-symbol{
-  font-size:36px;flex:1;display:flex;align-items:center;justify-content:center;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-.tarot-card-face .card-border-deco{
-  position:absolute;top:0;left:0;right:0;bottom:0;
-  border:3px solid transparent;border-image:linear-gradient(135deg,#b8960a,#d4a843,#b8960a) 1;
-  border-radius:10px;pointer-events:none;
-}
+.tarot-card-face .card-numeral{font-size:10px;color:#8b7355;position:absolute;top:6px;left:8px}
+.tarot-card-face .card-suit{font-size:28px;margin:4px 0}
+.tarot-card-face .card-name-cn{font-size:12px;font-weight:700;color:#2a1018;margin-top:2px}
+.tarot-card-face .card-name-en{font-size:8px;color:#8b7355}
+.tarot-card-face .card-symbol{font-size:32px;flex:1;display:flex;align-items:center;justify-content:center}
 
-.tarot-card-wrap:hover .tarot-card-inner:not(.flipped){
-  transform:translateY(-10px) scale(1.02);
-}
-.tarot-card-wrap:hover{
-  filter:drop-shadow(0 8px 20px rgba(160,100,200,0.3));
-}
-
-/* Glow effect when card is revealed */
-.tarot-card-inner.flipped .tarot-card-face{
-  animation:cardRevealGlow 1s ease-out;
-}
-@keyframes cardRevealGlow{
-  0%{box-shadow:0 0 40px rgba(200,160,224,0.6),0 4px 20px rgba(0,0,0,0.4)}
-  100%{box-shadow:0 4px 20px rgba(0,0,0,0.4)}
-}
-
-/* Spread position labels */
-.spread-position-label{
-  font-size:11px;color:rgba(200,180,220,0.6);text-align:center;
-  margin-top:6px;font-family:'ZCOOL XiaoWei',serif;letter-spacing:0.05em;
-}
+.tarot-card-wrap:hover .tarot-card-inner:not(.flipped){transform:translateY(-8px)}
 
 /* Reading panel */
-.reading-panel{margin-top:28px;animation:fadeSlideUp 0.4s ease}
-.card-reading{
-  background:linear-gradient(145deg,rgba(30,15,40,0.6),rgba(15,5,25,0.4));
-  border:1px solid rgba(160,100,200,0.15);border-radius:14px;
-  padding:22px;margin-bottom:14px;
-  transition:all 0.3s;
+.reading-panel{
+  margin-top:24px;
+  animation:fadeSlideUp 0.4s ease;
 }
-.card-reading:hover{
-  border-color:rgba(160,100,200,0.3);
-  box-shadow:0 4px 20px rgba(100,50,150,0.1);
+.card-reading{
+  background:rgba(212,168,67,0.03);border:1px solid rgba(212,168,67,0.1);
+  border-radius:12px;padding:20px;margin-bottom:12px;
 }
 .card-reading .card-title{
-  font-family:'Ma Shan Zheng',cursive;font-size:22px;color:#c8a0e0;margin-bottom:6px;
+  font-family:'Ma Shan Zheng',cursive;font-size:20px;color:#d4a843;margin-bottom:4px;
 }
-.card-reading .card-position{font-size:12px;color:rgba(200,180,220,0.5);margin-bottom:8px}
-.card-reading .card-orientation{font-size:14px;margin-bottom:8px;font-weight:700}
-.card-reading .card-orientation.upright{color:#a0d8a0}
-.card-reading .card-orientation.reversed{color:#e08080}
-.card-reading .card-meaning{font-size:14px;color:rgba(220,200,240,0.8);line-height:1.9}
+.card-reading .card-position{font-size:12px;color:rgba(240,214,138,0.5);margin-bottom:8px}
+.card-reading .card-orientation{font-size:13px;margin-bottom:8px}
+.card-reading .card-orientation.upright{color:#81c784}
+.card-reading .card-orientation.reversed{color:#ef9a9a}
+.card-reading .card-meaning{font-size:14px;color:rgba(240,214,138,0.8);line-height:1.8}
 .overall-reading{
-  background:linear-gradient(145deg,rgba(160,100,200,0.1),rgba(100,50,150,0.05));
-  border:1px solid rgba(160,100,200,0.25);border-radius:18px;
-  padding:28px;margin-top:24px;
-  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(212,168,67,0.08),rgba(212,168,67,0.02));
+  border:1px solid rgba(212,168,67,0.2);border-radius:16px;
+  padding:24px;margin-top:20px;
 }
-.overall-reading::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(160,100,200,0.5),transparent);
-}
-.overall-reading h3{
-  font-family:'Ma Shan Zheng',cursive;font-size:26px;
-  background:linear-gradient(180deg,#e0c0f0 20%,#a060c0 80%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:14px;letter-spacing:0.1em;
-}
+.overall-reading h3{font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#d4a843;margin-bottom:12px}
 
 .reset-btn{
-  background:linear-gradient(145deg,rgba(160,100,200,0.15),rgba(100,50,150,0.1));
-  border:1px solid rgba(160,100,200,0.3);
-  color:#c8a0e0;padding:12px 28px;border-radius:10px;cursor:pointer;
-  font-family:'Noto Serif SC',serif;font-size:14px;margin-top:20px;transition:all 0.3s;
-  letter-spacing:0.05em;
+  background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.2);
+  color:#d4a843;padding:10px 24px;border-radius:8px;cursor:pointer;
+  font-family:'Noto Serif SC',serif;font-size:14px;margin-top:16px;transition:all 0.3s;
 }
-.reset-btn:hover{
-  background:linear-gradient(145deg,rgba(160,100,200,0.25),rgba(100,50,150,0.2));
-  box-shadow:0 4px 20px rgba(100,50,150,0.2);
-}
+.reset-btn:hover{background:rgba(212,168,67,0.2)}
 
 /* ===================== RESPONSIVE ===================== */
 @media(max-width:768px){
   .pillars-row{grid-template-columns:repeat(2,1fr)}
   .cards-grid{grid-template-columns:1fr}
-  .tarot-card-wrap{width:100px;height:155px}
-  .tarot-card-face .card-symbol{font-size:26px}
-  .tarot-card-face .card-numeral{font-size:9px}
-  .tarot-card-face .card-name-cn{font-size:11px}
-  .spread-options{grid-template-columns:1fr;gap:16px}
+  .tarot-card-wrap{width:90px;height:135px}
+  .tarot-card-face .card-symbol{font-size:24px}
+  .tarot-card-face .card-numeral{font-size:8px}
+  .tarot-card-face .card-name-cn{font-size:10px}
   .form-row{flex-direction:column}
   .form-group{min-width:100%}
   .detail-grid{grid-template-columns:1fr}
@@ -553,25 +430,23 @@ body{
   <div class="view" id="view-tarot">
     <div class="glass-panel">
       <h3>🃏 塔罗占卜</h3>
-      <p class="text-muted mb-16" style="font-family:'ZCOOL XiaoWei',serif;font-size:15px;letter-spacing:0.08em">
-        静心冥想你的问题，选择牌阵，命运之轮即将转动
-      </p>
+      <p class="text-muted mb-16">选择牌阵，静心冥想你的问题，然后点击翻开每一张牌</p>
       <div id="spread-select">
         <div class="spread-options">
           <div class="spread-option" onclick="startTarot(1)">
             <span class="icon">🌟</span>
             <h4>单牌速占</h4>
-            <p>一张牌，一个答案<br>快速获得宇宙指引</p>
+            <p>一张牌，一个答案。快速获得指引</p>
           </div>
           <div class="spread-option" onclick="startTarot(3)">
             <span class="icon">🔺</span>
             <h4>三牌阵</h4>
-            <p>过去 · 现在 · 未来<br>洞察时间之流的奥秘</p>
+            <p>过去·现在·未来，洞察时间之流</p>
           </div>
           <div class="spread-option" onclick="startTarot(10)">
             <span class="icon">✨</span>
             <h4>凯尔特十字</h4>
-            <p>十张牌深度解读<br>全面揭示命运密码</p>
+            <p>十张牌深度解读，全面揭示命运</p>
           </div>
         </div>
       </div>
@@ -656,12 +531,6 @@ function calculateBazi(){
   const gender=document.getElementById('bz-gender').value;
   if(!y||!m||!d){alert('请输入完整的出生日期');return}
   if(h<0||h>23){alert('请输入有效小时(0-23)');return}
-
-  // Check if lunar-javascript library is loaded
-  if(typeof Solar==='undefined'){
-    alert('农历库加载失败，请检查网络连接后刷新页面重试');
-    return;
-  }
 
   try{
     const solar=Solar.fromYmdHms(y,m,d,h,mi,0);
@@ -827,64 +696,6 @@ const STEM_JI={
 // 28 Lunar Mansions (二十八宿)
 const LUNAR_MANSIONS=['角','亢','氐','房','心','尾','箕','斗','牛','女','虚','危','室','壁','奎','娄','胃','昴','毕','觜','参','井','鬼','柳','星','张','翼','轸'];
 
-// 日支对应生肖
-const DAY_ZODIAC_MAP={'子':'鼠','丑':'牛','寅':'虎','卯':'兔','辰':'龙','巳':'蛇','午':'马','未':'羊','申':'猴','酉':'鸡','戌':'狗','亥':'猪'};
-// 值神
-const DAY_DEITIES=['青龙','明堂','天刑','朱雀','金匮','天德','白虎','玉堂','天牢','玄武','司命','勾陈'];
-// 胎神
-const FETAL_GODS=['房床碓','厕灶厨','门炉灶','门床灶','门鸡栖','房床厕','碓磨门','仓库门','房床门','房床碓','门鸡栖','灶门厕'];
-// 彭祖百忌
-const PENGZU_STEM={'甲':'不开仓财物耗散','乙':'不栽植千株不长','丙':'不修灶必见灾殃','丁':'不剃头头必生疮','戊':'不受田田主不祥','己':'不破券二比并亡','庚':'不经络织机虚张','辛':'不合酱主人不尝','壬':'不泱水更难提防','癸':'不词讼理弱敌强'};
-const PENGZU_BRANCH={'子':'不问卜自惹祸殃','丑':'不冠带主不还乡','寅':'不祭祀神鬼不尝','卯':'不穿井水泉不香','辰':'不哭泣必主重丧','巳':'不远行财物伏藏','午':'不苫盖屋主更张','未':'不服药毒气入肠','申':'不安床鬼祟入房','酉':'不宴客醉坐颠狂','戌':'不作灶主祸难当','亥':'不嫁娶不利新郎'};
-
-// 建星解读
-const OFFICER_DESC={
-  '建':'建日：万物生育之始，主新的开始。宜出行、上任、会友。此日气场新生，适合启动新计划、开创新事业，但不宜动土、破土。',
-  '除':'除日：除旧布新之意，主清除障碍。宜治病、解除、清洁。此日适合扫除阴霾、化解矛盾，理发、沐浴、清洁之佳日。',
-  '满':'满日：丰收圆满之意，主成就圆满。宜祭祀、祈福、求财。此日气场充盈，适合收尾、完善已有之事，但忌开新局。',
-  '平':'平日：平常普通之日，无大吉无大凶。宜修造、修饰。此日气场平稳，适合处理日常事务、修缮整理。',
-  '定':'定日：安宁稳定之意，主安定不动。宜签约、纳采、安床。此日气场稳定，适合确定方案、签订合同、安顿事宜。',
-  '执':'执日：执行固守之意，主坚持不变。宜捕捉、执法。此日适合执行已有计划、坚守立场，但不宜变动。',
-  '破':'破日：破败损耗之意，主破坏消亡。宜拆卸、破屋。此日气场不稳，大事不宜，唯拆旧建新可用。理发大忌。',
-  '危':'危日：高处危险之意，主冒险不安。宜安床、祭祀。此日有风险之气，不宜登高、远行，需谨慎行事。',
-  '成':'成日：成功成就之意，主圆满成功。宜开业、嫁娶、签约。此日气场圆满，万事皆可成就，理发亦吉。',
-  '收':'收日：收成聚集之意，主收获收藏。宜纳财、收账。此日适合收拢资源、收回欠款，但忌开市、开业。',
-  '开':'开日：开放通达之意，主开创拓展。宜开业、出行、求财。此日气场开阔，万事开通，理发吉利。',
-  '闭':'闭日：关闭收藏之意，主封锁隐藏。宜安葬、收藏。此日气场封闭，不宜开业、出行，宜静养安息。'
-};
-
-// 二十八宿解读
-const MANSION_DESC={
-  '角':'角宿：蛟龙之角，主文运亨通。宜嫁娶、出行、修建。角宿值日百事吉，求谋望事皆如意。',
-  '亢':'亢宿：龙颈之意，主疾病口舌。忌出行、嫁娶。亢宿值日需谨慎，防口舌是非。',
-  '氐':'氐宿：龙胸之意，主喜庆之事。宜嫁娶、移徙。氐宿值日有喜事，诸事可行。',
-  '房':'房宿：龙腹之意，主财帛丰收。宜祭祀、嫁娶、移徙。房宿值日财源广进，万事如意。',
-  '心':'心宿：龙心之意，主凶灾不吉。忌嫁娶、远行。心宿值日需谨慎，大事不宜。',
-  '尾':'尾宿：龙尾之意，主福禄双全。宜嫁娶、造屋。尾宿值日有福气，诸事可行。',
-  '箕':'箕宿：龙尾之末，主风雨之象。忌出行。箕宿值日风雨至，出行不利。',
-  '斗':'斗宿：北斗之首，主文运官禄。宜祭祀、祈福。斗宿值日文运昌，求名求利皆可得。',
-  '牛':'牛宿：主牛马之事，忌嫁娶。牛宿值日有损耗，大事不宜。',
-  '女':'女宿：主布帛之事，宜裁衣。女宿值日利女红，裁衣缝制皆相宜。',
-  '虚':'虚宿：主虚耗之事，忌开业。虚宿值日有虚耗，求财不利。',
-  '危':'危宿：主危险之事，忌登高。危宿值日需谨慎，防危险意外。',
-  '室':'室宿：主室家之事，宜修造。室宿值日利修建，修造安门皆大吉。',
-  '壁':'壁宿：主图书之事，宜求学。壁宿值日文运佳，求学考试皆有利。',
-  '奎':'奎宿：主文库之事，宜求学。奎宿值日文运昌，读书作文皆有成。',
-  '娄':'娄宿：主聚众之事，宜祭祀。娄宿值日聚人气，祭祀祈福皆如意。',
-  '胃':'胃宿：主仓廪之事，宜纳财。胃宿值日利积财，收账纳财皆有成。',
-  '昴':'昴宿：主牢狱之事，忌诉讼。昴宿值日有牢狱，诉讼不利防灾厄。',
-  '毕':'毕宿：主雨泽之事，宜祈福。毕宿值日有雨泽，祈福祭祀皆如意。',
-  '觜':'觜宿：主行军之事，忌出行。觜宿值日不宜行，出行远游恐有险。',
-  '参':'参宿：主斩杀之事，忌诉讼。参宿值日有杀气，大事不宜需谨慎。',
-  '井':'井宿：主泉水之事，宜修造。井宿值日利修造，开渠引水皆大吉。',
-  '鬼':'鬼宿：主丧事之象，忌嫁娶。鬼宿值日有丧气，嫁娶移徙皆不宜。',
-  '柳':'柳宿：主酒食之事，宜宴饮。柳宿值日利宴客，酒食聚会皆如意。',
-  '星':'星宿：主衣裳之事，宜裁衣。星宿值日利裁衣，缝制新衣皆相宜。',
-  '张':'张宿：主喜庆之事，宜嫁娶。张宿值日有喜气，嫁娶纳采皆大吉。',
-  '翼':'翼宿：主远行之事，宜出行。翼宿值日利远行，出行求财皆如意。',
-  '轸':'轸宿：主车辆之事，忌出行。轸宿值日有车险，出行不利需谨慎。'
-};
-
 function initCalendar(){
   const now=new Date();
   calYear=now.getFullYear();calMonth=now.getMonth()+1;
@@ -980,51 +791,36 @@ function showDayDetail(d){
     const monthZhiIdx=ZHI_LIST.indexOf(monthZhi);
     const dayZhi=dayGZ[1];
     const dayZhiIdx=ZHI_LIST.indexOf(dayZhi);
-    const dayStem=dayGZ[0];
     let officerIdx=(dayZhiIdx-monthZhiIdx+12)%12;
     const officer=TWELVE_OFFICERS[officerIdx];
     const yi=OFFICER_YI[officer]||[];
     const ji=OFFICER_JI[officer]||[];
+
+    // Extra yi ji from stem
+    const dayStem=dayGZ[0];
     const extraYi=STEM_YI[dayStem]||[];
     const extraJi=STEM_JI[dayStem]||[];
+
+    // 28 mansions
     const mansionIdx=(dayZhiIdx*2+monthZhiIdx)%28;
     const mansion=LUNAR_MANSIONS[mansionIdx];
+
+    // Clash (冲)
     const clashIdx=(dayZhiIdx+6)%12;
     const clash=ZHI_LIST[clashIdx];
 
-    // 纳音
-    const nayin=lunar.getDayNaYin()||'';
-    // 五行
-    const dayElement=STEM_ELEMENT[dayStem]||'';
-    const branchElement=BRANCH_ELEMENT[dayZhi]||'';
-    // 生肖
-    const dayZodiac=DAY_ZODIAC_MAP[dayZhi]||'';
-    // 值神
-    const deityIdx=(dayZhiIdx+monthZhiIdx)%12;
-    const deity=DAY_DEITIES[deityIdx]||'';
-    // 胎神
-    const fetalGod=FETAL_GODS[dayZhiIdx]||'';
-    // 节气
-    const jieQi=lunar.getJieQi()||'';
-    // 彭祖百忌
-    const pengzuStem=PENGZU_STEM[dayStem]||'';
-    const pengzuBranch=PENGZU_BRANCH[dayZhi]||'';
-
-    // 吉时
+    // Auspicious hours (吉时) - simplified: based on day branch
     const goodHours=[];
     for(let hh=0;hh<12;hh++){
+      const hZhi=ZHI_LIST[(hh*2)%12]; // approximate mapping
       const hZhiIdx=(hh*2)%12;
+      // Simple: if hZhi and dayZhi form a harmonious relation (三合 or 六合)
       const diff=(hZhiIdx-dayZhiIdx+12)%12;
       if([0,3,4,6,8,9].includes(diff)){
         const hStr=(hh*2<10?'0':'')+hh*2+':00-'+((hh*2+2)<10?'0':'')+(hh*2+2)+':00';
         goodHours.push(hStr);
       }
     }
-
-    // 建星解释
-    const officerDesc=OFFICER_DESC[officer]||'';
-    // 宿解释
-    const mansionDesc=MANSION_DESC[mansion]||'';
 
     const allYi=[...new Set([...yi,...extraYi])];
     const allJi=[...new Set([...ji,...extraJi])];
@@ -1036,28 +832,11 @@ function showDayDetail(d){
         <div class="detail-grid">
           <div class="detail-item"><div class="label">干支日</div><div class="value">${dayGZ}</div></div>
           <div class="detail-item"><div class="label">农历</div><div class="value">${lunar.getYearInChinese()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()}</div></div>
-          <div class="detail-item"><div class="label">生肖日</div><div class="value">${dayZodiac}</div></div>
-          <div class="detail-item"><div class="label">纳音</div><div class="value">${nayin}</div></div>
-          <div class="detail-item"><div class="label">五行</div><div class="value">${dayElement}${branchElement}</div></div>
           <div class="detail-item"><div class="label">十二建星</div><div class="value">${officer}</div></div>
           <div class="detail-item"><div class="label">二十八宿</div><div class="value">${mansion}</div></div>
           <div class="detail-item"><div class="label">冲煞</div><div class="value">冲${clash}煞${clash}</div></div>
-          <div class="detail-item"><div class="label">值神</div><div class="value">${deity}</div></div>
-          <div class="detail-item"><div class="label">胎神</div><div class="value">${fetalGod}</div></div>
-          <div class="detail-item"><div class="label">彭祖</div><div class="value">${pengzuStem} ${pengzuBranch}</div></div>
-          ${jieQi?`<div class="detail-item"><div class="label">节气</div><div class="value">${jieQi}</div></div>`:''}
+          <div class="detail-item"><div class="label">生肖</div><div class="value">${lunar.getYearZodiac()}</div></div>
         </div>
-
-        <div style="margin-top:20px;padding:16px;background:rgba(212,168,67,0.03);border-radius:12px;border:1px solid rgba(212,168,67,0.1)">
-          <div style="font-family:'Ma Shan Zheng',cursive;font-size:16px;color:#d4a843;margin-bottom:8px">📖 建星解读</div>
-          <p style="font-size:13px;color:rgba(240,214,138,0.7);line-height:1.8">${officerDesc}</p>
-        </div>
-
-        <div style="margin-top:12px;padding:16px;background:rgba(212,168,67,0.03);border-radius:12px;border:1px solid rgba(212,168,67,0.1)">
-          <div style="font-family:'Ma Shan Zheng',cursive;font-size:16px;color:#d4a843;margin-bottom:8px">🌟 星宿解读</div>
-          <p style="font-size:13px;color:rgba(240,214,138,0.7);line-height:1.8">${mansionDesc}</p>
-        </div>
-
         <div style="margin-top:16px">
           <div class="section-title-sm">宜</div>
           <div class="yi-list">${allYi.map(y=>`<span class="yi-tag yi">${y}</span>`).join('')}</div>
@@ -1180,13 +959,7 @@ function startTarot(count){
     <div class="tarot-card-wrap" onclick="flipTarotCard(${i})" id="tc-${i}">
       <div class="tarot-card-inner">
         <div class="tarot-card-back">
-          <div class="back-design">
-            <div class="back-stars">✦ ✧ ✦</div>
-            <div class="back-line"></div>
-            <div class="back-moon">☽</div>
-            <div class="back-line"></div>
-            <div class="back-stars">✦ ✧ ✦</div>
-          </div>
+          <div class="back-symbol">✦</div>
         </div>
         <div class="tarot-card-face ${c.isReversed?'reversed-card':''}">
           <div class="card-numeral">${c.num||'0'}</div>
