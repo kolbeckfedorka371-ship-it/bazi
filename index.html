@@ -887,16 +887,8 @@ function getSeasonalAdvice(dmEl, strength, fav){
 }
 
 function getYuanTangGang(y,m,d,h,gender){
-  // 袁天罡称骨 - 年份重量
+  // 袁天罡称骨 - 年份重量（按六十甲子）
   const yearWeights={
-    '甲子':1.2,'乙丑':0.9,'丙寅':0.6,'丁卯':0.7,'戊辰':1.2,'己巳':0.5,'庚午':0.9,'辛未':0.8,
-    '壬申':0.7,'癸酉':0.8,'甲戌':1.5,'乙亥':0.9,'丙子':1.6,'丁丑':0.8,'戊寅':0.8,'己卯':1.9,
-    '庚辰':1.2,'辛巳':0.6,'壬午':0.8,'癸未':0.7,'甲申':0.5,'乙酉':1.5,'丙戌':0.6,'丁亥':1.6,
-    '戊子':1.5,'己丑':0.7,'庚寅':0.9,'辛卯':1.2,'壬辰':1.0,'癸巳':0.7,'甲午':1.5,'乙未':0.6,
-    '丙申':0.5,'丁酉':1.4,'戊戌':1.4,'己亥':0.9,'庚子':0.7,'辛丑':0.7,'壬寅':0.9,'癸卯':1.2,
-    '甲辰':0.8,'乙巳':0.7,'丙午':1.3,'丁未':0.5,'戊申':1.4,'己酉':0.5,'庚戌':0.9,'辛亥':1.7,
-    '壬子':0.5,'癸丑':0.7,'甲寅':1.2,'乙卯':0.8,'丙辰':0.8,'丁巳':0.6,'戊午':1.9,'己未':0.6,
-    '庚申':0.8,'辛酉':1.6,'壬戌':1.0,'癸亥':0.6,
     '甲子':1.2,'乙丑':0.9,'丙寅':0.6,'丁卯':0.7,'戊辰':1.2,'己巳':0.5,'庚午':0.9,'辛未':0.8,
     '壬申':0.7,'癸酉':0.8,'甲戌':1.5,'乙亥':0.9,'丙子':1.6,'丁丑':0.8,'戊寅':0.8,'己卯':1.9,
     '庚辰':1.2,'辛巳':0.6,'壬午':0.8,'癸未':0.7,'甲申':0.5,'乙酉':1.5,'丙戌':0.6,'丁亥':1.6,
@@ -906,42 +898,39 @@ function getYuanTangGang(y,m,d,h,gender){
     '壬子':0.5,'癸丑':0.7,'甲寅':1.2,'乙卯':0.8,'丙辰':0.8,'丁巳':0.6,'戊午':1.9,'己未':0.6,
     '庚申':0.8,'辛酉':1.6,'壬戌':1.0,'癸亥':0.6
   };
-  // 月份重量（农历）
+  // 月份重量（农历月）
   const monthWeights={1:0.6,2:0.7,3:1.8,4:0.9,5:0.5,6:1.6,7:0.9,8:1.5,9:1.8,10:0.8,11:0.9,12:0.5};
-  // 日期重量（农历）
+  // 日期重量（农历日）
   const dayWeights={1:0.5,2:1.0,3:0.8,4:1.5,5:1.6,6:1.5,7:0.8,8:1.6,9:0.8,10:1.6,11:0.9,12:1.7,13:0.8,14:1.7,15:1.0,16:0.8,17:0.9,18:1.8,19:0.5,20:1.5,21:1.0,22:0.9,23:0.8,24:0.9,25:1.5,26:1.8,27:0.7,28:0.8,29:1.6,30:0.6};
   // 时辰重量
   const hourWeights={'子':1.6,'丑':0.6,'寅':0.7,'卯':1.0,'辰':0.9,'巳':1.6,'午':1.0,'未':0.8,'申':0.8,'酉':0.9,'戌':0.6,'亥':0.6};
+  const zhiList=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
 
-  // 计算农历（简化 - 用近似值）
-  // 实际应该用 lunar-javascript 获取，但这里用简化计算
-  // 用年干支查重量
-  const gan=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
-  const zhi=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
-  
-  // 简化的干支年计算
-  const yearGanIdx=(y-4)%10;
-  const yearZhiIdx=(y-4)%12;
-  const yearGZ=gan[yearGanIdx]+zhi[yearZhiIdx];
-  
-  // 时辰地支
-  const hourIdx=Math.floor((h+1)%24/2);
-  const hourZhi=zhi[hourIdx];
-  
-  // 农历月（简化：用阳历月近似）
-  const lunarMonth=m;
-  // 农历日（简化）
-  const lunarDay=d;
-  
-  // 查重量
+  // 用 lunar-javascript 获取真实农历日期
+  let lunarMonth=m, lunarDay=d, yearGZ='', hourZhi='';
+  try{
+    var solar=Solar.fromYmdHms(y,m,d,h,0,0);
+    var lunar=solar.getLunar();
+    var ec=lunar.getEightChar();
+    lunarMonth=lunar.getMonth();
+    lunarDay=lunar.getDay();
+    yearGZ=ec.getYear();
+    hourZhi=ec.getTime()[1];
+  }catch(e){
+    // fallback: 简化计算
+    var gan=['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+    var zhi=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+    yearGZ=gan[(y-4)%10]+zhi[(y-4)%12];
+    hourZhi=zhiList[Math.floor((h+1)%24/2)];
+  }
+
   const yw=yearWeights[yearGZ]||1.0;
   const mw=monthWeights[lunarMonth]||1.0;
   const dw=dayWeights[lunarDay]||1.0;
   const hw=hourWeights[hourZhi]||1.0;
-  
   const total=parseFloat((yw+mw+dw+hw).toFixed(1));
-  
-  // 称骨歌诀
+
+  // 称骨歌诀（按骨重两数）
   const poems={
     2.1:'短命非业谓大空，平生灾难事重重，凶祸频临陷逆境，终世困苦事不成。',
     2.2:'身寒骨冷苦伶仃，此命推来行乞人，碌碌苦苦无乐日，终生孤单度一生。',
@@ -995,19 +984,20 @@ function getYuanTangGang(y,m,d,h,gender){
     7.0:'此命推来福泽长，一生衣禄自天降，田园财帛盈千万，堆金积玉满仓箱。',
     7.1:'此命生来大不同，公侯卿相在其中，一生自有逍遥福，富贵荣华极品隆。',
   };
-  
-  // 找最接近的歌诀
-  let closestKey=Object.keys(poems).reduce((a,b)=>Math.abs(parseFloat(a)-total)<Math.abs(parseFloat(b)-total)?a:b);
+
+  // 找最接近的歌诀（精确到0.1）
+  let closestKey=Object.keys(poems).reduce((a,b)=>{
+    let da=Math.abs(parseFloat(a)-total), db=Math.abs(parseFloat(b)-total);
+    return da<db?a:b;
+  });
   const poem=poems[closestKey]||'此命推来福禄丰，一生衣食不愁穷。';
-  
-  // 性别调整
+
   const genderText=gender==='female'?'女命':'男命';
-  
-  let text=`<p><strong>${genderText} · ${yearGZ}年 ${lunarMonth}月${lunarDay}日 ${hourZhi}时</strong></p>`;
+
+  let text=`<p><strong>${genderText} · ${yearGZ}年 农历${lunarMonth}月${lunarDay}日 ${hourZhi}时</strong></p>`;
   text+=`<p>📊 <strong>骨重：${total}两</strong>（年${yw}两 + 月${mw}两 + 日${dw}两 + 时${hw}两）</p>`;
   text+=`<p style="font-family:'Ma Shan Zheng',cursive;font-size:16px;color:#d4a843;margin:12px 0">📜 ${poem}</p>`;
-  
-  // 评级
+
   let rating='';
   if(total>=5.0)rating='🌟🌟🌟🌟🌟 上上之命，福禄双全';
   else if(total>=4.0)rating='🌟🌟🌟🌟 上等之命，衣食无忧';
@@ -1015,7 +1005,7 @@ function getYuanTangGang(y,m,d,h,gender){
   else if(total>=2.5)rating='🌟🌟 中下之命，需靠自强';
   else rating='🌟 劳碌之命，晚景渐好';
   text+=`<p><strong>评定：</strong>${rating}</p>`;
-  
+
   return text;
 }
 
