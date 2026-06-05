@@ -74,8 +74,8 @@ body{
   font-family:'ZCOOL XiaoWei',serif;
 }
 .cards-grid{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:20px;padding:0 20px 60px;max-width:800px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:20px;padding:0 20px 60px;max-width:1050px;margin:0 auto;
 }
 .module-card{
   background:linear-gradient(145deg,rgba(26,8,12,0.8),rgba(10,3,5,0.9));
@@ -470,7 +470,7 @@ body{
 /* ===================== RESPONSIVE ===================== */
 @media(max-width:768px){
   .pillars-row{grid-template-columns:repeat(2,1fr)}
-  .cards-grid{grid-template-columns:1fr}
+  .cards-grid{grid-template-columns:repeat(2,1fr)}
   .tarot-card-wrap{width:100px;height:155px}
   .tarot-card-face .card-symbol{font-size:26px}
   .tarot-card-face .card-numeral{font-size:9px}
@@ -704,6 +704,90 @@ body{
   .ly-line.yin::before,.ly-line.yin::after{width:32px}
   .ly-result-grid{grid-template-columns:1fr}
 }
+
+/* ===================== ZIWEI (紫微斗数) ===================== */
+#view-ziwei{background:radial-gradient(ellipse at 50% 20%,rgba(40,10,60,0.3) 0%,transparent 70%)}
+.zw-palace-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);
+  gap:4px;margin:20px auto;max-width:680px;aspect-ratio:1;
+}
+.zw-palace{
+  background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:8px;
+  padding:8px 6px;text-align:center;position:relative;min-height:70px;
+  transition:all 0.3s;
+}
+.zw-palace:hover{border-color:rgba(139,92,246,0.5);background:rgba(139,92,246,0.1)}
+.zw-palace .palace-name{font-size:13px;color:#8b5cf6;font-family:'Ma Shan Zheng',cursive;margin-bottom:4px}
+.zw-palace .palace-stars{font-size:11px;color:rgba(240,214,138,0.8);line-height:1.4}
+.zw-palace .palace-stars .star{display:inline-block;margin:1px 2px;padding:1px 4px;border-radius:4px;background:rgba(139,92,246,0.1)}
+.zw-palace .palace-stars .star.has-hua{background:rgba(212,168,67,0.15);color:#d4a843;font-weight:bold}
+.zw-palace .palace-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:10px;color:rgba(139,92,246,0.4)}
+.zw-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:16px 0}
+.zw-info-item{background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.15);border-radius:8px;padding:10px;text-align:center}
+.zw-info-item .label{font-size:11px;color:rgba(139,92,246,0.6)}
+.zw-info-item .value{font-size:15px;color:#8b5cf6;margin-top:4px}
+.zw-palace-detail{background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.15);border-radius:10px;padding:16px;margin:8px 0}
+.zw-palace-detail h4{color:#8b5cf6;font-family:'Ma Shan Zheng',cursive;font-size:18px;margin-bottom:8px}
+.zw-palace-detail .stars-list{color:#f0d68a;font-size:14px;margin-bottom:6px}
+.zw-palace-detail .interpretation{color:rgba(240,214,138,0.7);font-size:13px;line-height:1.8}
+.zw-hua-badge{display:inline-block;background:rgba(212,168,67,0.15);color:#d4a843;padding:1px 6px;border-radius:4px;font-size:11px;margin:0 2px}
+@media(max-width:768px){.zw-palace-grid{grid-template-columns:repeat(3,1fr);grid-template-rows:auto;aspect-ratio:auto}}
+
+/* ===================== MEIHUA (梅花易数) ===================== */
+#view-meihua{background:radial-gradient(ellipse at 50% 20%,rgba(5,40,30,0.3) 0%,transparent 70%)}
+.mh-trigram-box{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.2);
+  border-radius:12px;padding:16px 12px;min-width:100px;
+}
+.mh-trigram-box .trigram-name{font-family:'Ma Shan Zheng',cursive;font-size:22px;color:#10b981}
+.mh-trigram-box .trigram-element{font-size:12px;color:rgba(16,185,129,0.7)}
+.mh-trigram-box .trigram-lines{display:flex;flex-direction:column;gap:3px;margin:6px 0}
+.mh-trigram-box .t-line{height:4px;border-radius:2px;background:#10b981}
+.mh-trigram-box .t-line.broken{background:transparent;border-left:4px solid #10b981;border-right:4px solid #10b981;height:4px;box-sizing:border-box}
+.mh-hexagram-display{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;margin:20px 0}
+.mh-hexagram{display:flex;flex-direction:column;align-items:center;gap:6px}
+.mh-hexagram .hex-label{font-size:13px;color:rgba(16,185,129,0.7);margin-bottom:4px}
+.mh-hexagram .hex-lines{display:flex;flex-direction:column;gap:4px}
+.mh-hexagram .hex-line{width:60px;height:5px;border-radius:2px;background:#10b981}
+.mh-hexagram .hex-line.broken{background:transparent;border-left:6px solid #10b981;border-right:6px solid #10b981;height:5px;box-sizing:border-box}
+.mh-hexagram .hex-name{font-family:'Ma Shan Zheng',cursive;font-size:20px;color:#10b981;margin-top:4px}
+.mh-analysis{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.15);border-radius:10px;padding:16px;margin:12px 0}
+.mh-analysis h4{color:#10b981;font-family:'Ma Shan Zheng',cursive;font-size:18px;margin-bottom:8px}
+.mh-analysis p{color:rgba(240,214,138,0.7);font-size:13px;line-height:1.8}
+.mh-tiyong{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin:16px 0}
+.mh-tiyong .side{text-align:center;padding:16px;border-radius:12px}
+.mh-tiyong .side .side-label{font-size:13px;color:rgba(16,185,129,0.6)}
+.mh-tiyong .side .side-element{font-family:'Ma Shan Zheng',cursive;font-size:28px;color:#10b981;margin:4px 0}
+.mh-tiyong .relation{font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#d4a843}
+
+/* ===================== MARRIAGE (合婚配对) ===================== */
+#view-marriage{background:radial-gradient(ellipse at 50% 20%,rgba(50,10,30,0.3) 0%,transparent 70%)}
+.mj-score-ring{
+  width:180px;height:180px;border-radius:50%;margin:20px auto;position:relative;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  background:conic-gradient(#ec4899 var(--score-pct,0%),rgba(236,72,153,0.1) var(--score-pct,0%));
+  animation:ringReveal 1.5s ease-out forwards;
+}
+.mj-score-ring::before{content:'';position:absolute;width:150px;height:150px;border-radius:50%;background:#0a0305}
+.mj-score-ring .score-num{position:relative;font-family:'Ma Shan Zheng',cursive;font-size:48px;color:#ec4899;z-index:1}
+.mj-score-ring .score-label{position:relative;font-size:13px;color:rgba(236,72,153,0.7);z-index:1}
+@keyframes ringReveal{from{--score-pct:0%}to{--score-pct:var(--score-final,70%)}}
+.mj-rating{font-family:'Ma Shan Zheng',cursive;font-size:32px;color:#ec4899;text-align:center;margin:8px 0;text-shadow:0 0 20px rgba(236,72,153,0.3)}
+.mj-dimensions{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.mj-dim{display:flex;align-items:center;gap:12px}
+.mj-dim .dim-label{width:80px;font-size:13px;color:rgba(236,72,153,0.7)}
+.mj-dim .dim-bar-wrap{flex:1;height:20px;background:rgba(236,72,153,0.08);border-radius:10px;overflow:hidden}
+.mj-dim .dim-bar{height:100%;border-radius:10px;background:linear-gradient(90deg,#ec4899,#f472b6);transition:width 1s ease}
+.mj-dim .dim-score{width:40px;text-align:right;font-size:14px;color:#ec4899}
+.mj-persons{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:start;margin-bottom:20px}
+.mj-person-card{background:rgba(236,72,153,0.05);border:1px solid rgba(236,72,153,0.15);border-radius:12px;padding:16px;text-align:center}
+.mj-person-card h4{color:#ec4899;font-family:'Ma Shan Zheng',cursive;font-size:18px;margin-bottom:8px}
+.mj-vs{font-family:'Ma Shan Zheng',cursive;font-size:32px;color:#ec4899;align-self:center}
+.mj-advice{background:rgba(236,72,153,0.05);border:1px solid rgba(236,72,153,0.15);border-radius:10px;padding:16px;margin:12px 0}
+.mj-advice h4{color:#ec4899;font-family:'Ma Shan Zheng',cursive;font-size:18px;margin-bottom:8px}
+.mj-advice p{color:rgba(240,214,138,0.7);font-size:13px;line-height:1.8}
+
 </style>
 </head>
 <body>
@@ -739,6 +823,21 @@ body{
         <span class="icon">📿</span>
         <h2>六爻占卜</h2>
         <p>铜钱摇卦，解读卦象，洞察先机</p>
+      </div>
+      <div class="module-card" onclick="showView('ziwei')" style="border-color:rgba(139,92,246,0.2)">
+        <span class="icon">🔮</span>
+        <h2>紫微斗数</h2>
+        <p>星盘排布，宫位分析，命运解码</p>
+      </div>
+      <div class="module-card" onclick="showView('meihua')" style="border-color:rgba(16,185,129,0.2)">
+        <span class="icon">🌸</span>
+        <h2>梅花易数</h2>
+        <p>数字起卦，万物类象，即问即答</p>
+      </div>
+      <div class="module-card" onclick="showView('marriage')" style="border-color:rgba(236,72,153,0.2)">
+        <span class="icon">💕</span>
+        <h2>合婚配对</h2>
+        <p>双人八字，五行互补，姻缘评分</p>
       </div>
     </div>
 
@@ -927,6 +1026,104 @@ body{
       <div id="ly-play" class="hidden"></div>
     </div>
   </div>
+
+  <!-- ZIWEI (紫微斗数) MODULE -->
+  <div class="view" id="view-ziwei">
+    <div class="glass-panel">
+      <h3>🔮 紫微斗数排盘</h3>
+      <p style="text-align:center;font-family:'Ma Shan Zheng',cursive;font-size:20px;color:#8b5cf6;letter-spacing:0.15em;margin:12px 0 4px;text-shadow:0 0 12px rgba(139,92,246,0.3)">
+        「紫微星照，命盘玄机」
+      </p>
+      <p class="text-muted mb-16" style="font-family:'ZCOOL XiaoWei',serif;font-size:15px;letter-spacing:0.08em">
+        排布星盘，分析十二宫位，解读命运密码
+      </p>
+      <div class="form-row">
+        <div class="form-group"><label>出生年份</label><input type="number" id="zw-year" value="1990" min="1900" max="2100"></div>
+        <div class="form-group"><label>出生月份</label><select id="zw-month"></select></div>
+        <div class="form-group"><label>出生日期</label><select id="zw-day"></select></div>
+        <div class="form-group"><label>出生时辰</label><select id="zw-hour">
+          <option value="0">子时(23-01)</option><option value="1">丑时(01-03)</option>
+          <option value="2">寅时(03-05)</option><option value="3">卯时(05-07)</option>
+          <option value="4">辰时(07-09)</option><option value="5">巳时(09-11)</option>
+          <option value="6">午时(11-13)</option><option value="7">未时(13-15)</option>
+          <option value="8" selected>申时(15-17)</option><option value="9">酉时(17-19)</option>
+          <option value="10">戌时(19-21)</option><option value="11">亥时(21-23)</option>
+        </select></div>
+        <div class="form-group"><label>性别</label><select id="zw-gender">
+          <option value="male">男</option><option value="female">女</option>
+        </select></div>
+      </div>
+      <button class="btn" onclick="calcZiwei()" style="margin-top:12px;background:linear-gradient(135deg,#8b5cf6,#7c3aed)">开始排盘</button>
+      <div id="zw-result" style="margin-top:20px"></div>
+    </div>
+  </div>
+
+  <!-- MEIHUA (梅花易数) MODULE -->
+  <div class="view" id="view-meihua">
+    <div class="glass-panel">
+      <h3>🌸 梅花易数</h3>
+      <p style="text-align:center;font-family:'Ma Shan Zheng',cursive;font-size:20px;color:#10b981;letter-spacing:0.15em;margin:12px 0 4px;text-shadow:0 0 12px rgba(16,185,129,0.3)">
+        「心诚则灵，万物类象」
+      </p>
+      <p class="text-muted mb-16" style="font-family:'ZCOOL XiaoWei',serif;font-size:15px;letter-spacing:0.08em">
+        数字起卦，即问即答，洞察万物之理
+      </p>
+      <div style="margin-bottom:16px">
+        <label style="font-size:13px;color:rgba(240,214,138,0.6);display:block;margin-bottom:6px">输入1-3个数字（空格分隔），或留空使用当前时间起卦：</label>
+        <div class="form-row">
+          <div class="form-group" style="flex:3"><input type="text" id="mh-numbers" placeholder="例如: 3 7 15" style="width:100%"></div>
+          <div class="form-group" style="flex:1;min-width:auto"><button class="btn" onclick="calcMeihua()" style="width:100%;background:linear-gradient(135deg,#10b981,#059669)">起卦</button></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+        <button class="btn" onclick="calcMeihuaTime()" style="background:linear-gradient(135deg,#10b981,#059669);font-size:13px;padding:10px 20px">⏰ 时间起卦</button>
+        <button class="btn" onclick="calcMeihuaRandom()" style="background:linear-gradient(135deg,#10b981,#059669);font-size:13px;padding:10px 20px">🎲 随机起卦</button>
+      </div>
+      <div id="mh-result" style="margin-top:20px"></div>
+    </div>
+  </div>
+
+  <!-- MARRIAGE (合婚配对) MODULE -->
+  <div class="view" id="view-marriage">
+    <div class="glass-panel">
+      <h3>💕 合婚配对</h3>
+      <p style="text-align:center;font-family:'Ma Shan Zheng',cursive;font-size:20px;color:#ec4899;letter-spacing:0.15em;margin:12px 0 4px;text-shadow:0 0 12px rgba(236,72,153,0.3)">
+        「百年修得同船渡，千年修得共枕眠」
+      </p>
+      <p class="text-muted mb-16" style="font-family:'ZCOOL XiaoWei',serif;font-size:15px;letter-spacing:0.08em">
+        双人八字，五行互补，姻缘评分
+      </p>
+      <div class="mj-persons">
+        <div class="mj-person-card">
+          <h4>👤 甲方</h4>
+          <div class="form-group" style="margin-bottom:8px"><label>出生年份</label><input type="number" id="mj-a-year" value="1990" min="1900" max="2100"></div>
+          <div class="form-group" style="margin-bottom:8px"><label>出生月份</label><select id="mj-a-month"></select></div>
+          <div class="form-group" style="margin-bottom:8px"><label>出生日期</label><select id="mj-a-day"></select></div>
+          <div class="form-group"><label>出生时辰</label><select id="mj-a-hour">
+            <option value="0">子时</option><option value="1">丑时</option><option value="2">寅时</option>
+            <option value="3">卯时</option><option value="4">辰时</option><option value="5">巳时</option>
+            <option value="6">午时</option><option value="7">未时</option><option value="8" selected>申时</option>
+            <option value="9">酉时</option><option value="10">戌时</option><option value="11">亥时</option>
+          </select></div>
+        </div>
+        <div class="mj-vs">💕</div>
+        <div class="mj-person-card">
+          <h4>👤 乙方</h4>
+          <div class="form-group" style="margin-bottom:8px"><label>出生年份</label><input type="number" id="mj-b-year" value="1992" min="1900" max="2100"></div>
+          <div class="form-group" style="margin-bottom:8px"><label>出生月份</label><select id="mj-b-month"></select></div>
+          <div class="form-group" style="margin-bottom:8px"><label>出生日期</label><select id="mj-b-day"></select></div>
+          <div class="form-group"><label>出生时辰</label><select id="mj-b-hour">
+            <option value="0">子时</option><option value="1">丑时</option><option value="2">寅时</option>
+            <option value="3">卯时</option><option value="4">辰时</option><option value="5">巳时</option>
+            <option value="6">午时</option><option value="7">未时</option><option value="8">申时</option>
+            <option value="9" selected>酉时</option><option value="10">戌时</option><option value="11">亥时</option>
+          </select></div>
+        </div>
+      </div>
+      <button class="btn" onclick="calcMarriage()" style="margin-top:12px;background:linear-gradient(135deg,#ec4899,#db2777)">开始配对</button>
+      <div id="mj-result" style="margin-top:20px"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -968,6 +1165,9 @@ function showView(name){
     else if(name==='calendar'){document.title='黄历择吉 - 命理玄学';initCalendar()}
     else if(name==='tarot'){document.title='塔罗占卜 - 命理玄学';resetTarot()}
     else if(name==='liuyao'){document.title='六爻占卜 - 命理玄学';resetLy()}
+    else if(name==='ziwei'){document.title='紫微斗数 - 命理玄学';initZiweiSelects()}
+    else if(name==='meihua'){document.title='梅花易数 - 命理玄学'}
+    else if(name==='marriage'){document.title='合婚配对 - 命理玄学';initMarriageSelects()}
   }
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -2200,6 +2400,435 @@ function resetLy(){
   document.getElementById('ly-play').classList.add('hidden');
   document.getElementById('ly-play').innerHTML='';
   lyLines=[];lyChanging=[];
+}
+
+// ===================== ZIWEI (紫微斗数) MODULE =====================
+const ZW_STARS=['紫微','天机','太阳','武曲','天同','廉贞','天府','太阴','贪狼','巨门','天相','天梁','七杀','破军'];
+const ZW_PALACES=['命宫','兄弟宫','夫妻宫','子女宫','财帛宫','疾厄宫','迁移宫','交友宫','事业宫','田宅宫','福德宫','父母宫'];
+const ZW_FIVE局={'甲':'火六局','乙':'水二局','丙':'土五局','丁':'木三局','戊':'火六局','己':'水二局','庚':'土五局','辛':'木三局','壬':'火六局','癸':'水二局'};
+
+function calculateZiwei(){
+  const y=+document.getElementById('zw-year').value;
+  const m=+document.getElementById('zw-month').value;
+  const d=+document.getElementById('zw-day').value;
+  const h=+document.getElementById('zw-hour').value;
+  const gender=document.getElementById('zw-gender').value;
+  if(!y||!m||!d){alert('请输入完整出生日期');return}
+  if(typeof Solar==='undefined'){alert('农历库未加载');return}
+
+  try{
+    const solar=Solar.fromYmdHms(y,m,d,h,0,0);
+    const lunar=solar.getLunar();
+    const ec=lunar.getEightChar();
+    const yearGan=ec.getYear()[0];
+    const yearZhi=ec.getYear()[1];
+    const monthZhi=ec.getMonth()[1];
+    const dayGan=ec.getDay()[0];
+    const hourZhi=ec.getHour()[1];
+    const lunarMonth=lunar.getMonth();
+    const lunarDay=lunar.getDay();
+    const zodiac=lunar.getYearShengXiao();
+
+    // 五行局
+    const wuxingJu=ZW_FIVE局[yearGan]||'土五局';
+    const juNum=parseInt(wuxingJu[1])||5;
+
+    // 命宫位置(简化: 用月支+时辰地支计算)
+    const zhiList=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+    const monthIdx=zhiList.indexOf(monthZhi);
+    const hourIdx=zhiList.indexOf(hourZhi);
+    let mingGongIdx=(monthIdx-hourIdx+12)%12;
+    // 调整: 寅月起正月
+    mingGongIdx=(mingGongIdx+1)%12;
+
+    // 安紫微星系(简化)
+    const ziweiIdx=(mingGongIdx+lunarDay%12)%12;
+    const tianjiIdx=(ziweiIdx+1)%12;
+    const taiyangIdx=(ziweiIdx+3)%12;
+    const wuquIdx=(ziweiIdx+4)%12;
+    const tiantongIdx=(ziweiIdx+5)%12;
+    const lianzhenIdx=(ziweiIdx+8)%12;
+    const tianfuIdx=(12-ziweiIdx+mingGongIdx)%12;
+    const taiyinIdx=(tianfuIdx+11)%12;
+    const tanlangIdx=(tianfuIdx+2)%12;
+    const jumenIdx=(tianfuIdx+3)%12;
+    const tianxiangIdx=(tianfuIdx+4)%12;
+    const tianliangIdx=(tianfuIdx+5)%12;
+    const qishaIdx=(tianfuIdx+6)%12;
+    const pojunIdx=(tianfuIdx+10)%12;
+
+    // 四化(按年干)
+    const sihuaMap={
+      '甲':['廉贞','破军','武曲','太阳'],'乙':['天机','天梁','紫微','太阴'],
+      '丙':['天同','天机','文昌','廉贞'],'丁':['太阴','天同','天机','巨门'],
+      '戊':['贪狼','太阴','右弼','天机'],'己':['武曲','贪狼','天梁','文曲'],
+      '庚':['太阳','武曲','太阴','天同'],'辛':['巨门','太阳','文曲','文昌'],
+      '壬':['天梁','紫微','左辅','武曲'],'癸':['破军','巨门','太阴','贪狼']
+    };
+    const sihua=sihuaMap[yearGan]||[];
+
+    // 构建命盘
+    const palaces=[];
+    for(let i=0;i<12;i++){
+      const idx=(mingGongIdx+i)%12;
+      const name=ZW_PALACES[i];
+      const stars=[];
+      
+      // 检查哪些星在这个宫位
+      const starIdxMap={
+        '紫微':ziweiIdx,'天机':tianjiIdx,'太阳':taiyangIdx,'武曲':wuquIdx,
+        '天同':tiantongIdx,'廉贞':lianzhenIdx,'天府':tianfuIdx,'太阴':taiyinIdx,
+        '贪狼':tanlangIdx,'巨门':jumenIdx,'天相':tianxiangIdx,'天梁':tianliangIdx,
+        '七杀':qishaIdx,'破军':pojunIdx
+      };
+      
+      for(const [starName,starIdx] of Object.entries(starIdxMap)){
+        if(starIdx===idx){
+          const isSihua=sihua.includes(starName);
+          stars.push({name:starName,isSihua});
+        }
+      }
+      
+      palaces.push({name,idx,stars});
+    }
+
+    // 渲染命盘
+    const result=document.getElementById('ziwei-result');
+    result.classList.remove('hidden');
+    
+    let html='<div class="glass-panel"><h3>🔮 紫微命盘</h3>';
+    html+=`<p class="text-muted" style="margin-bottom:16px">${solar.toFullString()} | 农历${lunar.getYearInChinese()}年${lunar.getMonthInChinese()}月${lunar.getDayInChinese()} | ${zodiac} | ${gender}</p>`;
+    html+=`<p style="margin-bottom:20px"><strong>五行局：</strong>${wuxingJu} | <strong>命宫：</strong>${zhiList[mingGongIdx]}位</p>`;
+    
+    // 渲染12宫位网格
+    html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0">';
+    for(const palace of palaces){
+      const starsHtml=palace.stars.map(s=>{
+        const color=s.isSihua?'#f0d68a':'rgba(240,214,138,0.7)';
+        const suffix=s.isSihua?'✨':'';
+        return `<span style="color:${color};font-size:13px">${s.name}${suffix}</span>`;
+      }).join(' ')||'<span style="color:rgba(240,214,138,0.3);font-size:12px">空宫</span>';
+      
+      html+=`<div style="padding:10px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center">
+        <div style="font-size:12px;color:rgba(200,180,220,0.5);margin-bottom:4px">${palace.name}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center">${starsHtml}</div>
+      </div>`;
+    }
+    html+='</div>';
+    
+    // 四化说明
+    if(sihua.length>0){
+      html+=`<div style="margin-top:16px;padding:12px;background:rgba(139,92,246,0.05);border-radius:10px">
+        <p style="font-size:14px;color:rgba(200,180,220,0.8)"><strong>四化：</strong>
+          <span style="color:#f0d68a">化禄 ${sihua[0]||''}</span> · 
+          <span style="color:#c8a0e0">化权 ${sihua[1]||''}</span> · 
+          <span style="color:#80c0ff">化科 ${sihua[2]||''}</span> · 
+          <span style="color:#ff8080">化忌 ${sihua[3]||''}</span>
+        </p>
+      </div>`;
+    }
+    
+    // 解读
+    html+='<div class="glass-panel" style="margin-top:16px"><h3>📖 命盘解读</h3>';
+    html+='<div style="line-height:2;color:rgba(240,214,138,0.85);font-size:14px;margin-top:8px">';
+    html+=`<p>你的命宫在<strong>${zhiList[mingGongIdx]}</strong>位，`;
+    const mingPalace=palaces[0];
+    if(mingPalace.stars.length>0){
+      const starNames=mingPalace.stars.map(s=>s.name).join('、');
+      html+=`主星为<strong>${starNames}</strong>。`;
+      if(starNames.includes('紫微'))html+='紫微坐命，天生领导气质，有帝王之相，但也容易孤独。';
+      else if(starNames.includes('天机'))html+='天机坐命，聪明机智，善于策划，但思虑过多容易焦虑。';
+      else if(starNames.includes('太阳'))html+='太阳坐命，热情开朗，乐于奉献，适合公众事业。';
+      else if(starNames.includes('武曲'))html+='武曲坐命，果断务实，财运佳，适合金融商业。';
+      else if(starNames.includes('贪狼'))html+='贪狼坐命，多才多艺，桃花旺盛，但需专注。';
+      else html+=`${starNames}坐命，各有所长，需结合宫位综合分析。`;
+    }else{
+      html+='无主星坐镇，需借对宫星曜之力，属于"借星安命"格局。';
+    }
+    html+='</p>';
+    
+    // 财帛宫
+    const caiPalace=palaces[4];
+    if(caiPalace.stars.length>0){
+      html+=`<p style="margin-top:8px"><strong>财帛宫</strong>：${caiPalace.stars.map(s=>s.name).join('、')}坐镇，`;
+      if(caiPalace.stars.some(s=>s.name==='武曲'))html+='武曲入财帛，天生财运佳，适合投资理财。';
+      else if(caiPalace.stars.some(s=>s.name==='天府'))html+='天府守财，稳健保守，积蓄能力强。';
+      else html+='财运需结合整体命盘分析。';
+      html+='</p>';
+    }
+    
+    html+='</div></div>';
+    html+='</div>';
+    
+    result.innerHTML=html;
+    
+  }catch(err){
+    alert('排盘出错: '+err.message);
+    console.error(err);
+  }
+}
+
+function resetZiwei(){
+  document.getElementById('ziwei-result').classList.add('hidden');
+  document.getElementById('ziwei-result').innerHTML='';
+}
+
+// ===================== MEIHUA (梅花易数) MODULE =====================
+const MH_TRIGRAMS=['坤','乾','兑','离','震','巽','坎','艮'];
+const MH_ELEMENTS={'乾':'金','兑':'金','离':'火','震':'木','巽':'木','坎':'水','艮':'土','坤':'土'};
+const MH_BINARY={'乾':'111','兑':'011','离':'101','震':'001','巽':'110','坎':'010','艮':'100','坤':'000'};
+
+function calculateMeihua(){
+  const method=document.getElementById('mh-method').value;
+  let upper, lower, changing;
+  
+  if(method==='time'){
+    // 时间起卦
+    const now=new Date();
+    const y=now.getFullYear(), mon=now.getMonth()+1, d=now.getDate();
+    const h=now.getHours(), m=now.getMinutes();
+    upper=(y+mon+d)%8||8;
+    lower=(y+mon+d+h)%8||8;
+    changing=(y+mon+d+h+m)%6||6;
+  }else{
+    // 数字起卦
+    const n1=+document.getElementById('mh-n1').value;
+    const n2=+document.getElementById('mh-n2').value||n1;
+    const n3=+document.getElementById('mh-n3').value||0;
+    if(!n1){alert('请输入数字');return}
+    upper=n1%8||8;
+    lower=(n1+n2)%8||8;
+    changing=(n1+n2+n3)%6||6;
+  }
+  
+  const upperName=MH_TRIGRAMS[upper-1];
+  const lowerName=MH_TRIGRAMS[lower-1];
+  const upperBin=MH_BINARY[upperName];
+  const lowerBin=MH_BINARY[lowerName];
+  const hexBin=upperBin+lowerBin;
+  
+  // 查找卦名
+  const hexData=HEXAGRAMS[hexBin]||{name:'未知卦',desc:'卦象数据缺失'};
+  
+  // 计算变卦
+  const lines=(lowerBin+upperBin).split('').map(Number);
+  const changedLines=[...lines];
+  changedLines[changing-1]=changedLines[changing-1]?0:1;
+  const changedLower=changedLines.slice(0,3).join('');
+  const changedUpper=changedLines.slice(3,6).join('');
+  const changedHex=HEXAGRAMS[changedUpper+changedLower]||{name:'未知卦'};
+  
+  // 计算互卦
+  const mutualUpper=lines[1]+lines[2]+lines[3];
+  const mutualLower=lines[2]+lines[3]+lines[4];
+  const mutualHex=HEXAGRAMS[mutualUpper+mutualLower]||{name:'未知卦'};
+  
+  // 体用分析
+  const tiEl=MH_ELEMENTS[changing<=3?lowerName:upperName];
+  const yongEl=MH_ELEMENTS[changing<=3?upperName:lowerName];
+  const gen={'金':'水','水':'木','木':'火','火':'土','土':'金'};
+  const ctl={'金':'木','木':'土','土':'水','水':'火','火':'金'};
+  
+  let tiYong='';
+  if(tiEl===yongEl)tiYong='比和（同类），事情平稳';
+  else if(gen[tiEl]===yongEl)tiYong=`体${tiEl}生用${yongEl}（泄），有所消耗`;
+  else if(gen[yongEl]===tiEl)tiYong=`用${yongEl}生体${tiEl}（吉），有助力`;
+  else if(ctl[tiEl]===yongEl)tiYong=`体${tiEl}克用${yongEl}（财），可得财`;
+  else if(ctl[yongEl]===tiEl)tiYong=`用${yongEl}克体${tiEl}（凶），有阻碍`;
+  
+  // 渲染结果
+  const result=document.getElementById('meihua-result');
+  result.classList.remove('hidden');
+  
+  let html='<div class="glass-panel"><h3>🌸 梅花易数排盘</h3>';
+  html+=`<div style="display:flex;gap:30px;justify-content:center;margin:20px 0;flex-wrap:wrap">`;
+  html+=`<div style="text-align:center"><div style="font-size:18px;color:#10b981">本卦</div><div style="font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#d4a843">${hexData.name}</div></div>`;
+  html+=`<div style="text-align:center"><div style="font-size:18px;color:#f59e0b">变卦</div><div style="font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#d4a843">${changedHex.name}</div></div>`;
+  html+=`<div style="text-align:center"><div style="font-size:18px;color:#8b5cf6">互卦</div><div style="font-family:'Ma Shan Zheng',cursive;font-size:24px;color:#d4a843">${mutualHex.name}</div></div>`;
+  html+=`</div>`;
+  
+  html+=`<div style="margin-top:16px;padding:16px;background:rgba(16,185,129,0.05);border-radius:12px">`;
+  html+=`<p><strong>上卦：</strong>${upperName}（${MH_ELEMENTS[upperName]}）| <strong>下卦：</strong>${lowerName}（${MH_ELEMENTS[lowerName]}）| <strong>动爻：</strong>第${changing}爻</p>`;
+  html+=`<p style="margin-top:8px"><strong>体用关系：</strong>${tiYong}</p>`;
+  html+=`</div>`;
+  
+  html+=`<div class="glass-panel" style="margin-top:16px"><h3>📜 卦辞</h3>`;
+  html+=`<p style="line-height:2;color:rgba(240,214,138,0.85);font-size:14px;margin-top:8px">${hexData.desc||'暂无解读'}</p>`;
+  html+=`</div>`;
+  
+  html+=`</div>`;
+  result.innerHTML=html;
+}
+
+function toggleMhInputs(){
+  const method=document.getElementById('mh-method').value;
+  document.getElementById('mh-time-group').style.display=method==='time'?'block':'none';
+  document.getElementById('mh-number-group').style.display=method==='number'?'block':'none';
+}
+
+function resetMeihua(){
+  document.getElementById('meihua-result').classList.add('hidden');
+  document.getElementById('meihua-result').innerHTML='';
+}
+
+// ===================== MARRIAGE (合婚配对) MODULE =====================
+function calculateMarriage(){
+  const fields=['a-year','a-month','a-day','a-hour','b-year','b-month','b-day','b-hour'];
+  const vals={};
+  for(const f of fields){
+    vals[f]=+document.getElementById(f).value;
+    if(!vals[f]){alert('请填写完整信息');return}
+  }
+  if(typeof Solar==='undefined'){alert('农历库未加载');return}
+  
+  try{
+    const solarA=Solar.fromYmdHms(vals['a-year'],vals['a-month'],vals['a-day'],vals['a-hour'],0,0);
+    const solarB=Solar.fromYmdHms(vals['b-year'],vals['b-month'],vals['b-day'],vals['b-hour'],0,0);
+    const lunarA=solarA.getLunar(),lunarB=solarB.getLunar();
+    const ecA=lunarA.getEightChar(),ecB=lunarB.getEightChar();
+    const dGanA=ecA.getDay()[0],dGanB=ecB.getDay()[0];
+    const dZhiA=ecA.getDay()[1],dZhiB=ecB.getDay()[1];
+    
+    // 五行映射
+    const GAN_WX={'甲':'木','乙':'木','丙':'火','丁':'火','戊':'土','己':'土','庚':'金','辛':'金','壬':'水','癸':'水'};
+    const ZHI_WX={'子':'水','丑':'土','寅':'木','卯':'木','辰':'土','巳':'火','午':'火','未':'土','申':'金','酉':'金','戌':'土','亥':'水'};
+    const GEN={'木':'火','火':'土','土':'金','金':'水','水':'木'};
+    const CTL={'木':'土','火':'金','土':'水','金':'木','水':'火'};
+    
+    // 1. 日主关系 (25分)
+    const wxA=GAN_WX[dGanA], wxB=GAN_WX[dGanB];
+    let s1=0;
+    // 天干五合
+    const wuhe={'甲':'己','乙':'庚','丙':'辛','丁':'壬','戊':'癸','己':'甲','庚':'乙','辛':'丙','壬':'丁','癸':'戊'};
+    if(wuhe[dGanA]===dGanB)s1=25;
+    else if(wxA===wxB)s1=18;
+    else if(GEN[wxA]===wxB||GEN[wxB]===wxA)s1=22;
+    else s1=8;
+    
+    // 2. 天干互动 (15分)
+    let s2=10;
+    // 简化: 检查所有干支的五合
+    const allGanA=[ecA.getYear()[0],ecA.getMonth()[0],ecA.getDay()[0],ecA.getHour()[0]];
+    const allGanB=[ecB.getYear()[0],ecB.getMonth()[0],ecB.getDay()[0],ecB.getHour()[0]];
+    for(const ga of allGanA){
+      for(const gb of allGanB){
+        if(wuhe[ga]===gb)s2+=2;
+        // 相冲
+        const chong={'甲':'庚','乙':'辛','丙':'壬','丁':'癸','戊':'甲','己':'乙','庚':'丙','辛':'丁','壬':'戊','癸':'己'};
+        if(chong[ga]===gb)s2-=2;
+      }
+    }
+    s2=Math.max(0,Math.min(15,s2));
+    
+    // 3. 地支互动 (25分)
+    let s3=13;
+    const liuhe={'子':'丑','丑':'子','寅':'亥','亥':'寅','卯':'戌','戌':'卯','辰':'酉','酉':'辰','巳':'申','申':'巳','午':'未','未':'午'};
+    const allZhiA=[ecA.getYear()[1],ecA.getMonth()[1],ecA.getDay()[1],ecA.getHour()[1]];
+    const allZhiB=[ecB.getYear()[1],ecB.getMonth()[1],ecB.getDay()[1],ecB.getHour()[1]];
+    for(const za of allZhiA){
+      for(const zb of allZhiB){
+        if(liuhe[za]===zb)s3+=2;
+        // 六冲
+        const chongZ={'子':'午','丑':'未','寅':'申','卯':'酉','辰':'戌','巳':'亥','午':'子','未':'丑','申':'寅','酉':'卯','戌':'辰','亥':'巳'};
+        if(chongZ[za]===zb)s3-=2;
+      }
+    }
+    s3=Math.max(0,Math.min(25,s3));
+    
+    // 4. 十神互动 (15分) - 简化
+    let s4=10;
+    if(wuhe[dGanA]===dGanB)s4=14;
+    else if(GEN[wxA]===wxB||GEN[wxB]===wxA)s4=13;
+    else if(CTL[wxA]===wxB||CTL[wxB]===wxA)s4=7;
+    
+    // 5. 五行互补 (20分)
+    const countEls=(ec)=>{
+      const els=[GAN_WX[ec.getYear()[0]],GAN_WX[ec.getMonth()[0]],GAN_WX[ec.getDay()[0]],GAN_WX[ec.getHour()[0]],
+                 ZHI_WX[ec.getYear()[1]],ZHI_WX[ec.getMonth()[1]],ZHI_WX[ec.getDay()[1]],ZHI_WX[ec.getHour()[1]]];
+      const c={'木':0,'火':0,'土':0,'金':0,'水':0};
+      els.forEach(e=>{if(c[e]!==undefined)c[e]++});
+      return c;
+    };
+    const cA=countEls(ecA), cB=countEls(ecB);
+    let s5=12;
+    for(const el of ['木','火','土','金','水']){
+      if((cA[el]>=2&&cB[el]===0)||(cB[el]>=2&&cA[el]===0))s5+=2;
+      else if(cA[el]>=2&&cB[el]>=2)s5-=1;
+      else if(cA[el]===0&&cB[el]===0)s5-=1.5;
+    }
+    s5=Math.max(0,Math.min(20,Math.round(s5*10)/10));
+    
+    const total=Math.round(s1+s2+s3+s4+s5);
+    
+    // 评级
+    let grade='', gradeColor='';
+    if(total>=85){grade='上上婚配 🎉';gradeColor='#10b981';}
+    else if(total>=72){grade='上吉婚配 ✨';gradeColor='#34d399';}
+    else if(total>=58){grade='中吉婚配 👍';gradeColor='#fbbf24';}
+    else if(total>=45){grade='中平婚配 🤔';gradeColor='#f97316';}
+    else if(total>=30){grade='中下婚配 ⚠️';gradeColor='#ef4444';}
+    else{grade='下下婚配 ❌';gradeColor='#dc2626';}
+    
+    // 渲染
+    const result=document.getElementById('marriage-result');
+    result.classList.remove('hidden');
+    
+    let html=`<div class="glass-panel" style="text-align:center">
+      <h3>💕 合婚配对结果</h3>
+      <div style="margin:20px 0">
+        <span style="font-size:20px;color:#f0d68a">${lunarA.getYearInChinese()}年${lunarA.getMonthInChinese()}月${lunarA.getDayInChinese()}</span>
+        <span style="font-size:24px;color:#ec4899;margin:0 16px">❤️</span>
+        <span style="font-size:20px;color:#f0d68a">${lunarB.getYearInChinese()}年${lunarB.getMonthInChinese()}月${lunarB.getDayInChinese()}</span>
+      </div>
+      <div style="font-size:48px;font-weight:bold;color:${gradeColor};margin:16px 0">${total}分</div>
+      <div style="font-size:20px;color:${gradeColor};margin-bottom:20px">${grade}</div>
+    </div>`;
+    
+    // 五维评分
+    const dims=[
+      {name:'日主关系',score:s1,max:25,color:'#ec4899'},
+      {name:'天干互动',score:s2,max:15,color:'#8b5cf6'},
+      {name:'地支互动',score:s3,max:25,color:'#3b82f6'},
+      {name:'十神互动',score:s4,max:15,color:'#10b981'},
+      {name:'五行互补',score:s5,max:20,color:'#f59e0b'},
+    ];
+    
+    html+='<div class="glass-panel" style="margin-top:16px"><h3>📊 五维评分</h3>';
+    for(const d of dims){
+      const pct=Math.round(d.score/d.max*100);
+      html+=`<div style="margin:12px 0">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="color:rgba(240,214,138,0.8)">${d.name}</span>
+          <span style="color:${d.color}">${d.score}/${d.max}</span>
+        </div>
+        <div style="height:8px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:${d.color};border-radius:4px;transition:width 1s ease"></div>
+        </div>
+      </div>`;
+    }
+    html+='</div>';
+    
+    // 建议
+    html+='<div class="glass-panel" style="margin-top:16px"><h3>💡 配对建议</h3>';
+    html+='<div style="line-height:2;color:rgba(240,214,138,0.85);font-size:14px;margin-top:8px">';
+    if(total>=72)html+='<p>你们两人的八字非常相合！五行互补，天干地支互动良好，是一段值得珍惜的缘分。建议多沟通、互相信任，感情会越来越好。</p>';
+    else if(total>=58)html+='<p>你们的八字配合中等偏上，有一定的互补性。建议在生活中多包容对方的不足，发挥各自的优势，感情会稳步提升。</p>';
+    else if(total>=45)html+='<p>你们的八字配合一般，可能在某些方面存在摩擦。建议坦诚沟通，找到共同的兴趣和目标，避免因小事产生矛盾。</p>';
+    else html+='<p>你们的八字配合需要注意，可能存在一些五行冲突。建议多一些耐心和理解，必要时可以寻求专业命理师的建议。</p>';
+    html+='</div></div>';
+    
+    html+='</div>';
+    result.innerHTML=html;
+    
+  }catch(err){
+    alert('分析出错: '+err.message);
+    console.error(err);
+  }
+}
+
+function resetMarriage(){
+  document.getElementById('marriage-result').classList.add('hidden');
+  document.getElementById('marriage-result').innerHTML='';
 }
 
 // ===================== INIT =====================
